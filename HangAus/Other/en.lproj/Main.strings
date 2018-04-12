@@ -1,0 +1,29 @@
+
+"test"="test";
+"setting"="setting";
+"1000001"="Version is Requested[%#] or upper";
+"1000002"="Version is not match[Server %#]";
+"1000003"="DB Error";
+"1000004"="Open DB Error";
+"2000001"="Invalid request struct";
+"2000002"="Invalid parameter";
+"2000003"="Unlogined";
+"2000004"="Session timeout";
+"2000005"="Please set password first";
+"2000006"="You can change your password only";
+"2000007"="Password Error";
+"2000008"="Password Minimum length is 6";
+"2000009"="Password must include digit and letter";
+"2000010"="Password must include 3 different letters";
+"2000011"="Can not find Request Item";
+"2000012"="Existing";
+"2000013"="No binding Wechat ID";
+"2000014"="String is too long";
+"2000015"="Unsupport this request";
+"2000016"="Not authorized";
+
+"6000001"="Home";
+"6000002"="Manager";
+"6000003"="Settings";
+"6000004"="Report";
+"6000005"="edit";
