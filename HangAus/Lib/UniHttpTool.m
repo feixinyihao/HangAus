@@ -59,11 +59,13 @@ NSString * const actUrl[]={
     [GetOrder]=@"food/getorder/",
     [GetOrderno]=@"food/getorderno/",
     [SetOrder]=@"food/setorder/",
-
+    [SetShowfoodprice]=@"food/setshowfoodprice/",
+    [ShopInitOk]=@"shop/shopinitok/",
+    [SetShopsubfoodprice]=@"food/setshopsubfoodprice/",
 };
 
 @interface UniHttpTool()
-
+@property(nonatomic,strong)MBProgressHUD*HUD;
 
 @end
 @implementation UniHttpTool
@@ -203,4 +205,82 @@ NSString * const actUrl[]={
     }];
 }
 
+-(void)uploadWithparameters:(id)parameters
+                       name:(NSString *)name
+                   filename:(NSString*)filename
+                 uploadData:(NSData*)data
+                   mineType:(NSString*)mineType
+                    success:(void (^)(id  json))success{
+    NSString* URL=[NSString stringWithFormat:@"%@upload/img/",baseURL];
+    AFHTTPSessionManager* manager=[AFHTTPSessionManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    manager.responseSerializer.acceptableContentTypes= [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",nil];
+    [manager POST:URL parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        
+        [self hudTipWillShow:YES];
+        [formData appendPartWithFileData:data name:name fileName:filename  mimeType:mineType];
+        
+    } progress:^(NSProgress * _Nonnull uploadProgress) {
+        self.HUD.progress=uploadProgress.fractionCompleted;
+        
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        [self hudTipWillShow:NO];
+        if (success) {
+            success(responseObject);
+            NSString*str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
+            DLog(@"%@",str);
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        [self hudTipWillShow:NO];
+        
+        if (error.code == -1009) {
+            [MBProgressHUD showError:@"网络已断开"];
+        }else if (error.code == -1005){
+            [MBProgressHUD showError:@"网络连接已中断"];
+        }else if(error.code == -1001){
+            [MBProgressHUD showError:@"请求超时"];
+        }else if (error.code == -1003){
+            [MBProgressHUD showError:@"未能找到使用指定主机名的服务器"];
+        }else{
+            [MBProgressHUD showError:@"上传失败"];
+            
+            
+        }
+        
+    }];
+    
+}
++(void)uploadWithparameters:(id)parameters
+                   filename:(NSString*)filename
+                 uploadData:(NSData*)data
+                    success:(void (^)(id  json))success{
+    [[[self alloc]init] uploadWithparameters:parameters name:@"img" filename:@"hangaus.jpg" uploadData:data mineType:@"image/jpeg" success:^(id json) {
+        if (success) {
+            success(json);
+        }
+        
+    }];
+}
+#pragma mark -- init MBProgressHUD
+-(void)hudTipWillShow:(BOOL)willShow{
+    if (willShow) {
+        [[CommonFunc getCurrentVC] resignFirstResponder];
+        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        if (!_HUD) {
+            _HUD = [MBProgressHUD showHUDAddedTo:keyWindow animated:YES];
+            _HUD.mode = MBProgressHUDModeDeterminate;
+            _HUD.progress = 0;
+            _HUD.labelText = @"上传中";
+            _HUD.removeFromSuperViewOnHide = YES;
+        }else{
+            _HUD.progress = 0;
+            _HUD.labelText = @"上传中";
+            [keyWindow addSubview:_HUD];
+            [_HUD show:YES];
+        }
+    }else{
+        [_HUD hide:YES];
+    }
+}
 @end

@@ -16,11 +16,10 @@
 #import "ShowFood.h"
 #import <MJExtension.h>
 #import "ShowGroup.h"
-#import "DataBase.h"
 #import "MJRefresh.h"
-#import "NewFoodViewController.h"
 #import "MBProgressHUD+MJ.h"
 #import "EditFoodViewController.h"
+#import <BGFMDB.h>
 @interface ManagerViewController ()<UITableViewDelegate,UITableViewDataSource,FoodTableViewCellDelegate,CLLocationManagerDelegate>
 // 用来保存当前左边tableView选中的行数
 @property (strong, nonatomic) NSIndexPath *currentSelectIndexPath;
@@ -64,7 +63,11 @@
     self.navigationItem.leftBarButtonItem=leftButton;
     //[self startLocation];
     [self setBaseTableView];
-    [self setupData];
+    if ([ShowGroup bg_findAll:nil].count==0) {
+        [self setupData];
+    }else{
+        [self setupData2];
+    }
     DLog(@"%@",KLocalizedString(@"test"));
 }
 -(void)viewWillAppear:(BOOL)animated{
@@ -83,8 +86,9 @@
     _isPop=YES;
 }
 -(void)setupData2{
-    self.showGroupArr=[[DataBase sharedDataBase]getAllShowGroup];
-    self.showFoodArr=[[DataBase sharedDataBase]getAllShowFood];
+    self.showGroupArr=[ShowGroup bg_findAll:nil];
+    ShowGroup*showgroup=[self.showGroupArr firstObject];
+    self.showFoodArr=bg_executeSql(@"select * from ShowFood order by bg_dwDispOrder", @"ShowFood", [ShowFood class]);
     NSMutableArray*temp=[NSMutableArray array];
     for (int i=0; i<self.showGroupArr.count; i++) {
         ShowGroup*showGroup=self.showGroupArr[i];
@@ -93,7 +97,10 @@
             ShowFood*showFood=self.showFoodArr[j];
            
             if (showFood.dwGroupID==showGroup.dwGroupID) {
-                [kindFoodArr addObject:showFood];
+                if (!(showFood.dwSoldProp==2&&showFood.dwDefQuantity==0)) {
+                    [kindFoodArr addObject:showFood];
+                }
+                
             }
         }
         FoodKindTest*test=[[FoodKindTest alloc]init];
@@ -103,34 +110,40 @@
         [temp addObject:test];
     }
     self.foodKindArr=temp;
-    if (self.foodKindArr.count<1) {
-        [self setupData];
+    //如果数据大于一天就更新
+    if (([CommonFunc getCurrentDate]-[CommonFunc getTimestanps:showgroup.bg_updateTime])>86400) {
+        [UniHttpTool getwithparameters:nil option:GetShowGroup success:^(id json) {
+            for (NSDictionary*dict in json[@"data"]) {
+                ShowGroup*showgroup=[ShowGroup mj_objectWithKeyValues:dict];
+                [showgroup bg_saveOrUpdate];
+            }
+            
+            [UniHttpTool getwithparameters:nil option:GetShowFood success:^(id json) {
+                for (NSDictionary*dict in json[@"data"]) {
+                    ShowFood*showFood=[ShowFood mj_objectWithKeyValues:dict];
+                    [showFood bg_saveOrUpdate];
+                }
+            }];
+        }];
     }
-
 }
 -(void)setupData{
 
     [MBProgressHUD showHUDAddedTo:nil animated:YES];
-    [[DataBase sharedDataBase]deleteAllShowFood];
-    [[DataBase sharedDataBase]deleteAllShowGroup];
-    [[DataBase sharedDataBase]deleteAllChosenFood];
     [UniHttpTool getwithparameters:nil option:GetShowGroup success:^(id json) {
         
         if ([json[@"ret"] integerValue]==0) {
             NSMutableArray*temp=[NSMutableArray array];
-            ShowGroup*maxGroup=[[[DataBase sharedDataBase]getAllShowGroup] lastObject];
             for (NSDictionary*dict in json[@"data"]) {
                 ShowGroup*showgroup=[ShowGroup mj_objectWithKeyValues:dict];
                 [temp addObject:showgroup];
-                if (showgroup.dwGroupID>maxGroup.dwGroupID) {
-                    [[DataBase sharedDataBase]addshowGroup:showgroup];
-                }
+                [showgroup bg_saveOrUpdate];
+                
             }
             self.showGroupArr=temp;
             [UniHttpTool getwithparameters:nil option:GetShowFood success:^(id json) {
                 if ([json[@"ret"] intValue]==0) {
                     NSMutableArray*testArr=[NSMutableArray array];
-                    ShowFood*maxShowFood=[[[DataBase sharedDataBase]getAllShowFood]lastObject];
                     for (int i=0; i<self.showGroupArr.count; i++) {
                        
                         ShowGroup*group=self.showGroupArr[i];
@@ -139,14 +152,14 @@
                         for (NSDictionary*dict in json[@"data"]) {
                             ShowFood*showFood=[ShowFood mj_objectWithKeyValues:dict];
                             if (showFood.dwGroupID==group.dwGroupID) {
-                                [kindFoodArr addObject:showFood];
+                                if (!(showFood.dwDefQuantity==0&&showFood.dwSoldProp==2)) {
+                                    [kindFoodArr addObject:showFood];
+                                }   
+                               
                             }
-
-                            if (i==0&&showFood.dwShowFoodID>maxShowFood.dwShowFoodID) {
-                                
-                                [[DataBase sharedDataBase] addShowFood:showFood];
+                            if (i==0) {
+                                 [showFood bg_saveOrUpdate];
                             }
-                           
                             [foodtemp addObject:showFood];
                         }
                         self.showFoodArr=foodtemp;
@@ -197,8 +210,8 @@
     rightTableView.dataSource = leftTableView.dataSource = self;
     
    
-    UILongPressGestureRecognizer *longPressRight = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizedRight:)];
-    [self.rightTableView addGestureRecognizer:longPressRight];
+    //UILongPressGestureRecognizer *longPressRight = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizedRight:)];
+   // [self.rightTableView addGestureRecognizer:longPressRight];
 
 }
 #pragma mark - UITableViewDelegate && UITableViewDataSource

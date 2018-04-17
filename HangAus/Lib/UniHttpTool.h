@@ -58,6 +58,9 @@ typedef NS_ENUM(NSUInteger,act) {
     GetOrder,
     GetOrderno,
     SetOrder,
+    SetShowfoodprice,
+    ShopInitOk,
+    SetShopsubfoodprice,
 
 };
 
@@ -77,5 +80,8 @@ typedef NS_ENUM(NSUInteger,act) {
 
 
 
-
++(void)uploadWithparameters:(id)parameters
+                   filename:(NSString*)filename
+                 uploadData:(NSData*)data
+                    success:(void (^)(id  json))success;
 @end

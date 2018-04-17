@@ -15,4 +15,13 @@
              };
 }
 
+
+//BGFMDB
++(NSArray *)bg_unionPrimaryKeys{
+    return @[@"dwShowFoodID"];
+}
+
++(NSDictionary *)bg_objectClassInArray{
+    return @{@"ChosenFoods":[ChosenFood class]};
+}
 @end

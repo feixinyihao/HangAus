@@ -7,9 +7,8 @@
 //
 
 #import "CreatePackageViewController.h"
-#import "DataBase.h"
 #import <XXPickerView.h>
-#import "DataBase.h"
+#import <BGFMDB.h>
 #import "ShowGroup.h"
 #import "ShowFood.h"
 #import "ChosenFood.h"
@@ -21,6 +20,7 @@
 #import "CellWithView.h"
 #import "WithTextCell.h"
 #import "ShopSubFood.h"
+#import <BGFMDB.h>
 @interface CreatePackageViewController ()<UITableViewDelegate,UITableViewDataSource,XXPickerViewDelegate,WithTextCellDelegate>
 @property(nonatomic,strong)NSArray*titleArray;
 @property(nonatomic,weak)UITableView*tableView;
@@ -76,21 +76,19 @@
     [self setupUI];
     [self setupData];
     [self setupArray];
-    ShowFood*tempshowfood=[[[DataBase sharedDataBase]getShowFoodEqual:@"8"] lastObject];
-    ShowFood*tempshowfood2=[[[DataBase sharedDataBase]getAllShowFood]lastObject];
-    DLog(@"%ld--%ld",tempshowfood.dwDispOrder,tempshowfood2.dwShowFoodID);
+ 
 
  
 
 }
 -(void)setupArray{
-    self.showGroupArray=[[DataBase sharedDataBase]getAllShowGroup];
+    self.showGroupArray=[NSMutableArray arrayWithArray:[ShowGroup bg_findAll:nil]];
     NSMutableArray*temp=[NSMutableArray array];
     
     ShowGroup*showGroupTemp=[[ShowGroup alloc]init];
     for (int i=0; i<self.showGroupArray.count; i++) {
         ShowGroup*showGroup=self.showGroupArray[i];
-        if (![showGroup.szGroupName isEqualToString:@"Packages"]) {
+        if (showGroup.dwGroupID!=8) {
             [temp addObject:showGroup.szGroupName];
         }else{
             showGroupTemp=showGroup;
@@ -103,7 +101,7 @@
     
     
     ShowGroup*showgroup=self.showGroupArray[0];
-    self.showFoodArray=[[DataBase sharedDataBase]getShowFoodEqual:[NSString stringWithFormat:@"%ld",showgroup.dwGroupID]];
+    self.showFoodArray=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(showgroup.dwGroupID))]];
     
     NSMutableArray*foodTemp=[NSMutableArray array];
     for (int i=0; i<self.showFoodArray.count; i++) {
@@ -200,7 +198,8 @@
     NSInteger price=0;
     for (int i=0; i<chosenfoods.count; i++) {
         ChosenFood*chosenfood=chosenfoods[i];
-        ShowFood*chosenShowfood=[[DataBase sharedDataBase]getShowFoodWithID:chosenfood.dwShowFoodID];
+        NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
+        ShowFood*chosenShowfood=[array firstObject];
         if (chosenShowfood.dwSoldProp==2) {
             chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
             price=price+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO];
@@ -214,8 +213,7 @@
 
 
 -(void)save:(UIButton*)button{
-    ShowFood*tempshowfood=[[[DataBase sharedDataBase]getShowFoodEqual:@"8"] lastObject];
-    ShowFood*tempshowfood2=[[[DataBase sharedDataBase]getAllShowFood]lastObject];
+    ShowFood*tempshowfood=[[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(8))]] lastObject];
 
     NSMutableDictionary*parm=[NSMutableDictionary dictionary];
     parm[@"dwCookWayProp"]=@(0);
@@ -231,7 +229,6 @@
   
     parm[@"dwProp"]=@(0);
     parm[@"dwShopID"]=@(1);
-  //  parm[@"dwShowFoodID"]=@(tempshowfood2.dwShowFoodID+1);
     parm[@"dwShowProp"]=@(2);
     parm[@"dwSoldProp"]=@(0);
     parm[@"dwStat"]=@(2);
@@ -309,7 +306,8 @@
         NSInteger total=0;
         for (int i=0; i<showfood.ChosenFoods.count; i++) {
             ChosenFood*chosenfood=showfood.ChosenFoods[i];
-            ShowFood*chosenShowfood=[[DataBase sharedDataBase]getShowFoodWithID:chosenfood.dwShowFoodID];
+            NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
+            ShowFood*chosenShowfood=[array firstObject];
             if (chosenShowfood.dwSoldProp==2) {
                 chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
                 total=total+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO];
@@ -327,7 +325,7 @@
     }
 }
 -(NSInteger)returnTotalPrice:(NSInteger)incSubfood{
-    NSArray*subfoodArray=[[DataBase sharedDataBase]getAllShopSubFood];
+    NSArray*subfoodArray=[ShopSubFood bg_findAll:nil];
     NSInteger subPrice=0;
     for (int i=0; i<subfoodArray.count;i++) {
         ShopSubFood*subfood=subfoodArray[i];
@@ -339,7 +337,7 @@
 }
 - (void)xxPickerView:(XXPickerView *)pickerView didSelectTitles:(NSArray *)titles selectedRows:(NSArray *)rows{
     ShowFood*showfood=[self.showFoodArray objectAtIndex:[rows[1] integerValue]];
-    ShowFood*tempshowfood=[[[DataBase sharedDataBase]getAllShowFood]lastObject];
+
     ChosenFood*chosenfood=[[ChosenFood alloc]init];
     chosenfood.dwShowFoodID=showfood.dwShowFoodID;
     chosenfood.dwCookWayProp=showfood.dwCookWayProp;
@@ -368,7 +366,7 @@
     if (component==0) {
         self.lastSelRows=@[@(row),@(0)];
         ShowGroup*showgroup=self.showGroupArray[row];
-        self.showFoodArray=[[DataBase sharedDataBase]getShowFoodEqual:[NSString stringWithFormat:@"%ld",showgroup.dwGroupID]];
+        self.showFoodArray=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(showgroup.dwGroupID))]];
         
         NSMutableArray*foodTemp=[NSMutableArray array];
         for (int i=0; i<self.showFoodArray.count; i++) {

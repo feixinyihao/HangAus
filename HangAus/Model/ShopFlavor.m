@@ -9,5 +9,7 @@
 #import "ShopFlavor.h"
 
 @implementation ShopFlavor
-
++(NSArray *)bg_unionPrimaryKeys{
+    return @[@"dwFVID",@"dwShopID"];
+}
 @end

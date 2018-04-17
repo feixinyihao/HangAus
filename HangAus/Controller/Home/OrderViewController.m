@@ -15,9 +15,7 @@
 #import "ShowFood.h"
 #import <MJExtension.h>
 #import "ShowGroup.h"
-#import "DataBase.h"
 #import "MJRefresh.h"
-#import "NewFoodViewController.h"
 #import "MBProgressHUD+MJ.h"
 #import "JhtAnimationTools.h"
 #import "CartView.h"
@@ -29,6 +27,9 @@
 #import "OrderInfo.h"
 #import "PayViewController.h"
 #import "PackageOrderViewController.h"
+#import "ChosenFood.h"
+#import "ShopSubFood.h"
+#import <BGFMDB.h>
 @interface OrderViewController ()<UITableViewDelegate,UITableViewDataSource,FoodTableViewCellDelegate,JhtAnimationToolsDelegate,ChosenFoodPropViewDelegate>
 // 用来保存当前左边tableView选中的行数
 @property (strong, nonatomic) NSIndexPath *currentSelectIndexPath;
@@ -69,38 +70,18 @@
     self.navigationItem.backBarButtonItem = temporaryBarButtonItem;
     
     [self setBaseTableView];
-    [self setupData2];
+    if ([ShowGroup bg_findAll:nil].count==0) {
+        [self setupData];
+    }else{
+        [self setupData2];
+    }
+    
     [self setupBottom];
     
-    [self setupshopFlavor];
-    
     
 }
--(void)setupshopFlavor{
-    [UniHttpTool getwithparameters:nil option:GetShopFlavor success:^(id json) {
-        if ([json[@"ret"] integerValue]==0) {
-            NSMutableArray*temp=[NSMutableArray array];
-            for (NSDictionary*dict in json[@"data"]) {
-                ShopFlavor*shopflavor=[ShopFlavor mj_objectWithKeyValues:dict];
-                [temp addObject:shopflavor];
-            }
-            self.shopFlavorArray=temp;
-        }
-        
-    }];
-    
-    [UniHttpTool getwithparameters:nil option:GetShopCookWay success:^(id json) {
-        if ([json[@"ret"] integerValue]==0) {
-            NSMutableArray*temp=[NSMutableArray array];
-            for (NSDictionary*dict in json[@"data"]) {
-                ShopCookway*cookway=[ShopCookway mj_objectWithKeyValues:dict];
-                [temp addObject:cookway];
-            }
-            self.shopCookWayArray=temp;
-        }
-        
-    }];
-}
+
+
 -(void)setupBottom{
     UIView*shadowview=[[UIView alloc]init];
     UITapGestureRecognizer* shadowTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shadowTap:)];
@@ -149,39 +130,49 @@
     self.shadowView.hidden=YES;
 }
 -(void)handleSingleTap:(id)sender{
-    if (self.orderShowfood.count>0) {
+    if (self.orderFoods.count>0) {
         
         self.orderBackgroudView.backgroundColor=[UIColor whiteColor];
-        for (int i=0; i<self.orderShowfood.count; i++) {
-            ShowFood*showfood=self.orderShowfood[i];
+        NSMutableArray*noChosenFoods=[NSMutableArray array];
+        for (int i=0; i<self.orderFoods.count; i++) {
+            OrderFood*orderfood=self.orderFoods[i];
+            if (orderfood.dwParentIndex==0) {
+                [noChosenFoods addObject:orderfood];
+            }
+        }
+        for (int i=0; i<noChosenFoods.count; i++) {
+            OrderFood*orderfood=noChosenFoods[i];
             UIView*cellView=[[UIView alloc]initWithFrame:CGRectMake(0, i*50, kScreenW, 50)];
+            cellView.backgroundColor=[UIColor whiteColor];
             UILabel*nameLabel=[[UILabel alloc]initWithFrame:CGRectMake(20, 0, kScreenW-120, 50)];
             nameLabel.font=[UIFont systemFontOfSize:15];
-            nameLabel.text=[NSString stringWithFormat:@"%@  $%.2f",showfood.szDispName,showfood.dwUnitPrice*showfood.orderNum/100.0];
+            nameLabel.text=[NSString stringWithFormat:@"%ld  $%.2f", orderfood.dwShowFoodID,orderfood.dwFoodPrice/100.0];
             [cellView addSubview:nameLabel];
             [self.orderBackgroudView addSubview:cellView];
             
             PPNumberButton*ppBtn=[[PPNumberButton alloc]initWithFrame:CGRectMake(kScreenW-100, 10, 80, 20)];
             ppBtn.increaseImage = [UIImage imageNamed:@"increase"];
             ppBtn.decreaseImage = [UIImage imageNamed:@"decrease"];
-            ppBtn.currentNumber=showfood.orderNum;
+            ppBtn.currentNumber=orderfood.dwQuantity;
             [cellView addSubview:ppBtn];
-            
-            
         }
         self.shadowView.alpha=0;
         [UIView animateWithDuration:0.25 animations:^{
-            self.orderBackgroudView.frame=CGRectMake(0, kScreenH-64-49-50*self.orderShowfood.count, kScreenW, 50*self.orderShowfood.count);
-            self.shadowView.alpha=0.8;
+            self.orderBackgroudView.frame=CGRectMake(0, kScreenH-64-49-50*noChosenFoods.count, kScreenW, 50*noChosenFoods.count);
+            self.shadowView.alpha=1;
         }];
         
-        self.shadowView.frame=CGRectMake(0, 0, kScreenW, kScreenH-49-50*self.orderShowfood.count);
+        self.shadowView.frame=CGRectMake(0, 0, kScreenW, kScreenH-49-50*noChosenFoods.count);
         self.shadowView.hidden=NO;
     }
 }
+
+
 -(void)setupData2{
-    self.showGroupArr=[[DataBase sharedDataBase]getAllShowGroup];
-    self.showFoodArr=[[DataBase sharedDataBase]getAllShowFood];
+    self.showGroupArr=[ShowGroup bg_findAll:nil];
+    ShowGroup*showgroup=[self.showGroupArr firstObject];
+ 
+    self.showFoodArr=bg_executeSql(@"select * from ShowFood order by bg_dwDispOrder", @"ShowFood", [ShowFood class]);
     NSMutableArray*temp=[NSMutableArray array];
     for (int i=0; i<self.showGroupArr.count; i++) {
         ShowGroup*showGroup=self.showGroupArr[i];
@@ -200,35 +191,44 @@
         [temp addObject:test];
     }
     self.foodKindArr=temp;
-    if (self.foodKindArr.count<1) {
-        [self setupData];
+    //如果数据大于一天就更新
+    if (([CommonFunc getCurrentDate]-[CommonFunc getTimestanps:showgroup.bg_updateTime])>86400) {
+        [UniHttpTool getwithparameters:nil option:GetShowGroup success:^(id json) {
+            for (NSDictionary*dict in json[@"data"]) {
+                ShowGroup*showgroup=[ShowGroup mj_objectWithKeyValues:dict];
+                [showgroup bg_saveOrUpdate];
+            }
+            
+            [UniHttpTool getwithparameters:nil option:GetShowFood success:^(id json) {
+                for (NSDictionary*dict in json[@"data"]) {
+                    ShowFood*showFood=[ShowFood mj_objectWithKeyValues:dict];
+                    [showFood bg_saveOrUpdate];
+                }
+            }];
+        }];
     }
     
 }
 -(void)setupData{
     
     [MBProgressHUD showHUDAddedTo:nil animated:YES];
-//    [[DataBase sharedDataBase]deleteAllShowFood];
-//    [[DataBase sharedDataBase]deleteAllShowGroup];
-//    [[DataBase sharedDataBase]deleteAllChosenFood];
-    NSDictionary*parm=@{@"dwStat":@(2)};
-    [UniHttpTool getwithparameters:parm option:GetShowGroup success:^(id json) {
+    [UniHttpTool getwithparameters:nil option:GetShowGroup success:^(id json) {
         
         if ([json[@"ret"] integerValue]==0) {
             NSMutableArray*temp=[NSMutableArray array];
-            ShowGroup*maxGroup=[[[DataBase sharedDataBase]getAllShowGroup] lastObject];
+
             for (NSDictionary*dict in json[@"data"]) {
                 ShowGroup*showgroup=[ShowGroup mj_objectWithKeyValues:dict];
                 [temp addObject:showgroup];
-                if (showgroup.dwGroupID>maxGroup.dwGroupID) {
-                   // [[DataBase sharedDataBase]addshowGroup:showgroup];
-                }
+                //插入数据库
+                [showgroup bg_saveOrUpdate];
+               
             }
             self.showGroupArr=temp;
             [UniHttpTool getwithparameters:nil option:GetShowFood success:^(id json) {
                 if ([json[@"ret"] intValue]==0) {
                     NSMutableArray*testArr=[NSMutableArray array];
-                    ShowFood*maxShowFood=[[[DataBase sharedDataBase]getAllShowFood]lastObject];
+                  
                     for (int i=0; i<self.showGroupArr.count; i++) {
                         
                         ShowGroup*group=self.showGroupArr[i];
@@ -239,12 +239,10 @@
                             if (showFood.dwGroupID==group.dwGroupID) {
                                 
                                 [kindFoodArr addObject:showFood];
+                                //插入数据库
+                                [showFood bg_saveOrUpdate];
                             }
-                            
-                            if (i==0&&showFood.dwShowFoodID>maxShowFood.dwShowFoodID) {
-                                
-                               // [[DataBase sharedDataBase] addShowFood:showFood];
-                            }
+                          
                             
                             [foodtemp addObject:showFood];
                         }
@@ -364,7 +362,6 @@
             NSArray*tempArr=foodkind.foodArr;
             cell.isSales=YES;
             ShowFood*showfood=tempArr[indexPath.row];
-            showfood.imagePath=@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518005336571&di=fdbc1c5b14d803c6d14a3341bb067eae&imgtype=0&src=http%3A%2F%2Fimg.line0.com%2Fstatic%2Fimage%2F1703%2FSHNS0401428473271790.jpg";
             cell.food=showfood;
         }
         return cell;
@@ -438,7 +435,7 @@
 
 
 
-
+//点击加号
 -(void)ppNumDidClickWithCell:(FoodTableViewCell *)cell withIncreaseStatus:(BOOL)status{
     
      NSIndexPath*indexPath=[self.rightTableView indexPathForCell:cell];
@@ -459,47 +456,52 @@
             
             [tools aniStartShopCarAnimationWithStartRect:rect withImageView:aniImage withView:self.view withEndPoint:CGPointMake(30, kScreenH-40-65) withControlPoint:CGPointMake(rect.origin.x-80, rect.origin.y-80) withStartToEndSpacePercentage:0 withExpandAnimationTime:0 withNarrowAnimationTime:0.4 withAnimationValue:1];
             
-            if (showfood.orderNum==1) {
-                [self.orderShowfood addObject:showfood];
-            }
-            
-            DLog(@"%@--%ld",self.orderShowfood,showfood.orderNum);
+            [self addCartWithCell:cell];
         }else{
-            showfood.orderNum=showfood.orderNum-1;
+           
             NSArray<NSIndexPath*>*indexArray=@[indexPath];
             [self.rightTableView reloadRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationFade];
-            ChosenFoodPropView*propView=[[ChosenFoodPropView alloc]initWithShowFood:showfood withFlavorArray:self.shopFlavorArray withCookwayArray:self.shopCookWayArray];
+            ChosenFoodPropView*propView=[[ChosenFoodPropView alloc]initWithShowFood:showfood];
+            propView.indexPath=indexPath;
             propView.delegate=self;
             [self.navigationController.view addSubview:propView];
            
         }
         
     }else{
-        
+        for (int i=0; i<self.orderFoods.count; i++) {
+            OrderFood*orderfood=self.orderFoods[i];
+            if (orderfood.dwShowFoodID==showfood.dwShowFoodID) {
+                [self.orderFoods removeObject:orderfood];
+                DLog(@"%@",self.orderFoods);
+            }
+        }
       
         showfood.orderNum=showfood.orderNum-1;
         self.orderNum=self.orderNum-1;
         self.cartView.num=self.orderNum;
         [self.cartView reload];
-       
-        if (showfood.orderNum==0) {
-            [self.orderShowfood removeObject:showfood];
-        }
-        if (self.orderShowfood.count==0) {
+        
+        if (self.orderFoods.count==0) {
             [self.totalPrice setText:@""];
             self.payBtn.hidden=YES;
         }else{
-            [self.totalPrice setText:[NSString stringWithFormat:@"$%.2f",[self returnPriceFromOrderFoods:self.orderShowfood]/100.0]];
+            [self.totalPrice setText:[NSString stringWithFormat:@"$%.2f",[self returnPriceFromOrderFoods:self.orderFoods]/100.0]];
         }
-        DLog(@"%@--%ld",self.orderShowfood,showfood.orderNum);
     }
-   
-    
 }
 -(NSInteger)returnPriceFromOrderFoods:(NSArray*)orderfoods{
     NSInteger total=0;
     for (OrderFood*orderfood in orderfoods) {
-        total=total+orderfood.dwFoodPrice+orderfood.dwCookPrice+orderfood.dwFlavorPrice+orderfood.dwSubFoodPrice-orderfood.dwFoodDiscount-orderfood.dwSubFoodDiscount;
+        if (orderfood.dwParentIndex==0) {
+            total=total+orderfood.dwFoodPrice+
+            orderfood.dwCookPrice+
+            orderfood.dwFlavorPrice+
+            orderfood.dwSubFoodPrice-
+            orderfood.dwFoodDiscount-
+            orderfood.dwSubFoodDiscount;
+        }
+        
     }
     return total;
 }
@@ -523,8 +525,45 @@
     [self.totalPrice setText:[NSString stringWithFormat:@"$%.2f",[self returnPriceFromOrderFoods:self.orderFoods]/100.0]];
     
 }
+//基础食物加入购物车
+-(void)addCartWithCell:(UITableViewCell*)cell{
+    NSIndexPath*indexPath=[self.rightTableView indexPathForCell:cell];
+    FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
+    NSArray*tempArr=foodkind.foodArr;
+    ShowFood*showfood=tempArr[indexPath.row];
+    
+    OrderFood*orderfood=[[OrderFood alloc]init];
+    orderfood.dwFoodIndex=self.orderFoods.count+1;
+    orderfood.szSelFlavor=@"";
+    orderfood.dwShowFoodID=showfood.dwShowFoodID;
+    orderfood.dwSelCookWay=0;
+    orderfood.dwFoodType=1;
+    orderfood.dwParentIndex=0;
+    orderfood.dwQuantity=1;
+    orderfood.dwFoodPrice=showfood.dwSoldPrice;
+    orderfood.dwCookPrice=0;
+    orderfood.dwSubFoodPrice=0;
+    //口味价格先不考虑
+    orderfood.dwFlavorPrice=0;
+    orderfood.dwFoodDiscount=0;
+    orderfood.dwSubFoodDiscount=0;
+    [self.orderFoods addObject:orderfood];
+    DLog(@"%@",orderfood.mj_keyValues);
+}
 
--(void)ChosenFoodPropViewOrderWithOrderFood:(OrderFood *)orderfood{
+-(NSInteger)returnTotalPrice:(NSInteger)incSubfood{
+    NSArray*subfoodArray=[ShopSubFood bg_findAll:nil];
+    NSInteger subPrice=0;
+    for (int i=0; i<subfoodArray.count;i++) {
+        ShopSubFood*subfood=subfoodArray[i];
+        if ((incSubfood&subfood.dwSFID)==subfood.dwSFID) {
+            subPrice=subPrice+subfood.dwUnitPrice;
+        }
+    }
+    return subPrice;
+}
+//加入购物车
+-(void)ChosenFoodPropViewOrderWithOrderFood:(OrderFood *)orderfood withIndexPath:(NSIndexPath *)indexPath{
     orderfood.dwFoodIndex=self.orderFoods.count+1;
     NSDictionary*dict=orderfood.mj_keyValues;
     DLog(@"%@",dict);
@@ -535,10 +574,33 @@
     aniImage.frame=CGRectMake(rect.origin.x, rect.origin.y, 10, 10);
     [tools aniStartShopCarAnimationWithStartRect:rect withImageView:aniImage withView:self.navigationController.view withEndPoint:CGPointMake(30, kScreenH-40) withControlPoint:CGPointMake(rect.origin.x-60, rect.origin.y-60) withStartToEndSpacePercentage:0 withExpandAnimationTime:0 withNarrowAnimationTime:0.4 withAnimationValue:1];
     [self.orderFoods addObject:orderfood];
+    //刷新
+    FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
+    NSArray*tempArr=foodkind.foodArr;
+    ShowFood*showfood=tempArr[indexPath.row];
+    showfood.orderNum=showfood.orderNum+1;
+
+    NSArray<NSIndexPath*>*indexPathArray=@[indexPath];
+    [self.rightTableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
+    
 }
 -(void)FoodTableViewCellOrderPackages:(FoodTableViewCell *)cell withShowfood:(ShowFood *)showfood{
   
     PackageOrderViewController*package=[[PackageOrderViewController alloc]init];
+    package.VCBlock = ^(NSArray *orderfoods) {
+        DLog(@"orderfoods:%@",orderfoods);
+        [self.orderFoods addObjectsFromArray:orderfoods];
+        self.orderNum=self.orderNum+1;
+        self.cartView.num=self.orderNum;
+        self.payBtn.hidden=NO;
+        [self.cartView reload];
+        [self.totalPrice setText:[NSString stringWithFormat:@"$%.2f",[self returnPriceFromOrderFoods:self.orderFoods]/100.0]];
+        NSIndexPath*indexPath=[self.rightTableView indexPathForCell:cell];
+        NSArray<NSIndexPath*>*indexPathArray=@[indexPath];
+        [self.rightTableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
+        
+    };
+    package.orderfoodscount=self.orderFoods.count;
     package.showfood=showfood;
     [self.navigationController pushViewController:package animated:YES];
 }
@@ -550,7 +612,7 @@
         orderInfo.szOrderNo=dict[@"szOrderNo"];
         orderInfo.dwOrderType=10;
         orderInfo.dwPayType=1;
-        orderInfo.dwOrderStat=18;
+        orderInfo.dwOrderStat=0x12;
         orderInfo.dwOrderDate=[[self getCurrentDate:YES onlytime:NO] integerValue];
         orderInfo.dwOrderTime=[[self getCurrentDate:NO onlytime:YES] integerValue];
         orderInfo.dwTakeDate=[[self getCurrentDate:YES onlytime:NO] integerValue];

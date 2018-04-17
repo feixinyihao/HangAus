@@ -11,13 +11,13 @@
 @protocol ChosenFoodPropViewDelegate <NSObject>
 @optional
 -(void)ChosenFoodPropViewOrderWithSelFlavor:(NSString*)szSelFlavor withSelSubFood:(NSString*)szSelSubFood withSelCookWay:(NSInteger)dwSelCookWay withShowFood:(ShowFood*)showfood;
--(void)ChosenFoodPropViewOrderWithOrderFood:(OrderFood*)orderfood;
+-(void)ChosenFoodPropViewOrderWithOrderFood:(OrderFood*)orderfood withIndexPath:(NSIndexPath*)indexPath;
 @end
 
 @interface ChosenFoodPropView : UIView
-
--(instancetype)initWithShowFood:(ShowFood*)showfood withFlavorArray:(NSArray*)FlavorArray withCookwayArray:(NSArray*)cookwayArray;
-
+@property(nonatomic,strong)NSIndexPath*indexPath;
+-(instancetype)initWithShowFood:(ShowFood*)showfood;
+-(instancetype)initWithShowFood:(ShowFood *)showfood isPackage:(BOOL)package;
 
 @property(nonatomic,strong)id <ChosenFoodPropViewDelegate>delegate;
 @end

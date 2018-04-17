@@ -11,8 +11,8 @@
 #import <UIImageView+WebCache.h>
 #import <PPNumberButton.h>
 #import "ShopSubFood.h"
-#import "DataBase.h"
 #import "ChosenFood.h"
+#import "PackageBtn.h"
 @interface FoodTableViewCell()
 @property(nonatomic,strong)UIImageView*foodImage;
 
@@ -28,7 +28,7 @@
 
 @property(nonatomic,strong)PPNumberButton*ppBtn;
 
-@property(nonatomic,strong)UIButton*packgesBtn;
+@property(nonatomic,strong)PackageBtn*packgesBtn;
 @end
 @implementation FoodTableViewCell
 
@@ -55,7 +55,8 @@
 
 -(void)setupView{
     self.foodImage.frame=CGRectMake(10, 10, 80, 80);
-    [self.foodImage sd_setImageWithURL:[NSURL URLWithString:self.food.imagePath]];
+
+    [self.foodImage sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@.jpg",KrootImagePath,[CommonFunc md5:[NSString stringWithFormat:@"%ld",self.food.dwShowFoodID]]]] placeholderImage:[UIImage imageNamed:@"coca"] options:SDWebImageRefreshCached];
     [self.contentView addSubview:self.foodImage];
     
     self.foodName.frame=CGRectMake(100, 10, self.frame.size.width-100, 30);
@@ -64,7 +65,7 @@
     
     self.foodBalance.frame=CGRectMake(100, 40, 100, 30);
    
-    self.foodBalance.text=[NSString stringWithFormat:@"$%.1f0",[self returnPriceFromShowFood:self.food isDiscount:YES]/100.0];
+    self.foodBalance.text=[NSString stringWithFormat:@"$%.2f",self.food.dwSoldPrice/100.0];
     self.foodBalance.textColor=[UIColor orangeColor];
     [self.contentView addSubview:self.foodBalance];
     
@@ -77,7 +78,6 @@
     [self.editBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.editBtn];
     
-   
     self.downBtn.layer.cornerRadius=4;
     self.downBtn.tag=801;
     [self.downBtn addTarget:self action:@selector(editBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -94,12 +94,11 @@
         self.shadow.font=[UIFont systemFontOfSize:12];
         self.shadow.textAlignment=NSTextAlignmentCenter;
         self.shadow.text=@"售卖中";
-       
     }else{
          [self.downBtn setTitle:@"上架" forState:UIControlStateNormal];
          self.shadow.frame=CGRectMake(0, 0, 80, 80);
          self.shadow.backgroundColor=[[UIColor blackColor] colorWithAlphaComponent:0.2];
-         self.shadow.textColor=[UIColor grayColor];
+         self.shadow.textColor=[UIColor orangeColor];
          self.shadow.font=[UIFont systemFontOfSize:12];
          self.shadow.textAlignment=NSTextAlignmentCenter;
          self.shadow.text=@"停止售卖";
@@ -112,17 +111,19 @@
         if (self.food.dwShowProp==2) {
             [self.contentView addSubview:self.packgesBtn];
             [self.packgesBtn addTarget:self action:@selector(packageOrder:) forControlEvents:UIControlEventTouchUpInside];
+            self.packgesBtn.orderNum=self.food.orderNum;
             [self.ppBtn removeFromSuperview];
         }else{
             self.ppBtn.frame=CGRectMake(kScreenW*0.75-20-80, 60, 80, 20);
             self.ppBtn.decreaseHide = YES;
             self.ppBtn.shakeAnimation = YES;
+            self.ppBtn.minValue=1;
+            self.ppBtn.maxValue=10;
             self.ppBtn.currentNumber=self.food.orderNum;
             self.ppBtn.increaseImage = [UIImage imageNamed:@"increase"];
             self.ppBtn.decreaseImage = [UIImage imageNamed:@"decrease"];
             __weak typeof(self) weakSelf = self;
-            self.ppBtn.resultBlock = ^(NSInteger number, BOOL increaseStatus) {
-                //DLog(@"%ld---%d",number,increaseStatus);
+            self.ppBtn.resultBlock = ^(PPNumberButton *ppBtn, CGFloat number, BOOL increaseStatus) {
                 
                 if ([weakSelf.delegate respondsToSelector:@selector(ppNumDidClickWithCell:withIncreaseStatus:)]) {
                     [weakSelf.delegate ppNumDidClickWithCell:weakSelf withIncreaseStatus:increaseStatus];
@@ -141,46 +142,6 @@
     if ([self.delegate respondsToSelector:@selector(FoodTableViewCellOrderPackages:withShowfood:)]) {
         [self.delegate FoodTableViewCellOrderPackages:self withShowfood:self.food];
     }
-}
--(NSInteger)returnPriceFromShowFood:(ShowFood*)showfood isDiscount:(BOOL)discount{
-    //论重量卖
-    if (showfood.dwSoldProp==2) {
-        if (showfood.dwDefQuantity==0) {
-            return discount?showfood.dwUnitPrice-showfood.dwDiscount: showfood.dwUnitPrice;
-        }else{
-            return discount?roundf(showfood.dwUnitPrice*showfood.dwDefQuantity/1000.0-showfood.dwDiscount):roundf(showfood.dwUnitPrice*showfood.dwDefQuantity/1000.0);
-        }
-        //套餐
-    }else if (showfood.dwShowProp==2){
-        NSInteger total=0;
-        for (int i=0; i<showfood.ChosenFoods.count; i++) {
-            ChosenFood*chosenfood=showfood.ChosenFoods[i];
-            ShowFood*chosenShowfood=[[DataBase sharedDataBase]getShowFoodWithID:chosenfood.dwShowFoodID];
-            if (chosenShowfood.dwSoldProp==2) {
-                chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
-                 total=total+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO];
-            }else{
-                 total=total+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO]*chosenfood.dwQuantity;
-            }
-        }
-        return discount?total-showfood.dwDiscount:total;
-        //食物包含配料
-    }else if (showfood.dwIncSubFood){
-        return discount?[self returnTotalPrice:showfood.dwIncSubFood]+showfood.dwUnitPrice-showfood.dwDiscount:[self returnTotalPrice:showfood.dwIncSubFood]+showfood.dwUnitPrice;
-    }else{
-        return discount?showfood.dwUnitPrice-showfood.dwDiscount:showfood.dwUnitPrice;
-    }
-}
--(NSInteger)returnTotalPrice:(NSInteger)incSubfood{
-    NSArray*subfoodArray=[[DataBase sharedDataBase]getAllShopSubFood];
-    NSInteger subPrice=0;
-    for (int i=0; i<subfoodArray.count;i++) {
-        ShopSubFood*subfood=subfoodArray[i];
-        if ((incSubfood&subfood.dwSFID)==subfood.dwSFID) {
-            subPrice=subPrice+subfood.dwUnitPrice;
-        }
-    }
-    return subPrice;
 }
 
 -(void)editBtnClick:(UIButton*)btn{
@@ -236,17 +197,16 @@
     }
     return _ppBtn;
 }
--(UIButton *)packgesBtn{
+-(PackageBtn *)packgesBtn{
     if (!_packgesBtn) {
-        _packgesBtn=[[UIButton alloc]init];
+        _packgesBtn=[[PackageBtn alloc]initWithFrame:CGRectMake((kScreenW*0.75-90)*4/7+90, 70, (kScreenW*0.75-90)*2/7, 30)];
         [_packgesBtn setTitle:@"随心配" forState:UIControlStateNormal];
         _packgesBtn.titleLabel.font=[UIFont systemFontOfSize:15];
         [_packgesBtn setTitleColor:KmainColor forState:UIControlStateNormal];
         _packgesBtn.layer.cornerRadius=5;
-        _packgesBtn.layer.masksToBounds=YES;
         _packgesBtn.layer.borderColor=KmainColor.CGColor;
         _packgesBtn.layer.borderWidth=1;
-        _packgesBtn.frame=CGRectMake((kScreenW*0.75-90)*4/7+90, 70, (kScreenW*0.75-90)*2/7, 30);
+       
     }
     return _packgesBtn;
 }

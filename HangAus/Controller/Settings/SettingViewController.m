@@ -205,11 +205,13 @@
         pick.allowCrop=YES;
         pick.naviBgColor=KmainColor;
         [pick setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-            DLog(@"%@",photos);
-            
             [self.shopImageview setImage:photos[0]];
-           // NSArray<NSIndexPath*>*indexPaths=@[indexPath];
-           // [tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+            NSDictionary*parm=@{@"file_key":@"777"};
+            NSData*data=UIImagePNGRepresentation(photos[0]);
+            [UniHttpTool uploadWithparameters:parm filename:parm[@"file_key"] uploadData:data success:^(id json) {
+                DLog(@"%@",json);
+            }];
+           
         }];
         [self presentViewController:pick animated:YES completion:nil];
     }

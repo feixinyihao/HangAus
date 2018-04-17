@@ -10,4 +10,7 @@
 
 @implementation ShopSubFood
 
++(NSArray *)bg_unionPrimaryKeys{
+    return @[@"dwSFID",@"dwShopID"];
+}
 @end

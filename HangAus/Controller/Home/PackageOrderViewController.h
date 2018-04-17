@@ -10,4 +10,8 @@
 @class ShowFood;
 @interface PackageOrderViewController : UIViewController
 @property(nonatomic,strong)ShowFood*showfood;
+
+@property(nonatomic,copy)void (^VCBlock)(NSArray *orderfoods);
+
+@property(nonatomic,assign)NSInteger orderfoodscount;
 @end

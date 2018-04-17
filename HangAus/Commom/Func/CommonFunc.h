@@ -19,4 +19,7 @@
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
 + (NSString *)returnJSONStringWithDictionary:(NSDictionary *)dictionary;
 + (NSString *)returnStringWithArray:(NSArray *)array;
++ (long long)getCurrentDate;
++ (long long)getTimestanps:(NSString*)time;
++ (NSString *) md5:(NSString *) input;
 @end

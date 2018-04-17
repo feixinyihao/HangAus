@@ -10,4 +10,7 @@
 
 @implementation ShowGroup
 
++(NSArray *)bg_uniqueKeys{
+    return @[@"dwGroupID"];
+}
 @end

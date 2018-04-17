@@ -27,5 +27,5 @@
 @property(nonatomic,copy)NSString* szMemo;
 @property(nonatomic,copy)NSString* szName;
 @property(nonatomic,copy)NSString* szValueName;
-
++(NSArray *)bg_unionPrimaryKeys;
 @end

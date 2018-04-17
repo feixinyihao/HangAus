@@ -10,6 +10,5 @@
 @class ShowFood;
 @interface PackageExchange : NSObject
 @property(nonatomic,strong)ShowFood*chosenShowFood;
-@property(nonatomic,strong)NSArray<ShowFood*>*sameGroupFoods;
-@property(nonatomic,assign)NSInteger cellHigh;
+
 @end

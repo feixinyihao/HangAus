@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "ChosenFood.h"
 @interface ShowFood : NSObject
 @property(nonatomic,assign)NSInteger dwUnitWeight;
 
@@ -51,6 +51,10 @@
 @property(nonatomic,assign)NSInteger dwIncSubFood;
 @property(nonatomic,assign)NSInteger dwDefQuantity;
 @property(nonatomic,strong)NSMutableArray*ChosenFoods;
+
+@property(nonatomic,assign)NSInteger dwTotalPrice;
+@property(nonatomic,assign)NSInteger dwSoldPrice;
+
 /**
  测试使用
  */
@@ -59,5 +63,9 @@
 + (NSDictionary *)objectClassInArray;
 
 
-
+/**
+ BGFMDB
+ */
++(NSArray *)bg_unionPrimaryKeys;
++(NSDictionary *)bg_objectClassInArray;
 @end

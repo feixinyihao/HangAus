@@ -101,6 +101,7 @@
         change.oldPassword=self.passWordField.text;
         [self.navigationController pushViewController:change animated:YES];
         [MBProgressHUD hideHUD];
+        
        
     }];
     

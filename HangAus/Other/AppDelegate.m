@@ -26,6 +26,9 @@
     self.window=[[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor=[UIColor whiteColor];
     if (token) {
+//        LoginViewController*login=[[LoginViewController alloc]init];
+//        BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];
+//        self.window.rootViewController=base;
         MainViewController*main=[[MainViewController alloc]init];
         self.window.rootViewController=main;
     }else{
@@ -59,5 +62,6 @@
     keyboardManager.keyboardDistanceFromTextField = 10.0f; // 输入框距离键盘的距离
     
 }
+
 
 @end

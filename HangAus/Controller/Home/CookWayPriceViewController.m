@@ -10,7 +10,6 @@
 #import "UniHttpTool.h"
 #import "SubFoodCell.h"
 #import <MJExtension.h>
-#import "DataBase.h"
 #import "MBProgressHUD+MJ.h"
 #import "ShopCookway.h"
 @interface CookWayPriceViewController()<UITableViewDelegate,UITableViewDataSource,SubFoodCellDelegate>
@@ -29,7 +28,6 @@
 
 -(void)setupData{
     [MBProgressHUD showHUDAddedTo:nil animated:YES];
-    [[DataBase sharedDataBase]deleteAllShopSubFood];
     [UniHttpTool getwithparameters:nil option:GetShopCookWay success:^(id json) {
         NSMutableArray*temp=[NSMutableArray array];
         for (NSDictionary*dict in json[@"data"]) {

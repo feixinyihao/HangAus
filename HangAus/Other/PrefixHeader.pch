@@ -18,6 +18,8 @@
 #define KLocalizedString(key) [CommonFunc showText:key]
 #define KDoc [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject]
 #define KUID [[[UIDevice currentDevice] identifierForVendor] UUIDString]
+#define KrootImagePath @"http://10.121.0.250:8088/static/imgs/"
+
 #ifdef DEBUG    //调试阶段
 
 #define DLog(...) NSLog(__VA_ARGS__)

@@ -7,7 +7,7 @@
 //
 
 #import "SetSubFoodViewController.h"
-#import "DataBase.h"
+#import <BGFMDB.h>
 #import "SubFood.h"
 @interface SetSubFoodViewController ()
 @property(nonatomic,strong)NSArray*subFoodArray;
@@ -21,13 +21,13 @@
     [super viewDidLoad];
     self.title=@"可选配菜";
     self.tableView.tableFooterView=[[UIView alloc]init];
-    self.subFoodArray=[[DataBase sharedDataBase]getAllSubFood];
+    self.subFoodArray=[SubFood bg_findAll:nil];
     [self setupData];
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
 }
 
 -(void)save{
-    [self .navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
     if (self.VCBlock){
         self.VCBlock(self.propDict);
         
@@ -68,7 +68,6 @@
     SubFood*subfood=self.subFoodArray[indexPath.row];
     cell.textLabel.text=subfood.szName;
     cell.accessoryView=[self.isSelectedArray[indexPath.row] boolValue]?[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"yes"]]:nil;
-    
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

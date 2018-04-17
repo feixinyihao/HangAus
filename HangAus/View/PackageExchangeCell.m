@@ -10,11 +10,12 @@
 #import "PackageExchange.h"
 #import "ShowFood.h"
 #import <UIImageView+WebCache.h>
+#import <PPNumberButton.h>
 @interface PackageExchangeCell()
 @property(nonatomic,strong)UIImageView*foodImageView;
 @property(nonatomic,strong)UILabel*foodNameL;
 @property(nonatomic,strong)UIButton*editBtn;
-
+@property(nonatomic,strong)UILabel*numL;
 @end
 @implementation PackageExchangeCell
 
@@ -31,47 +32,30 @@
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
 }
--(void)setPackage:(PackageExchange *)package{
-    _package=package;
+-(void)setShowfood:(ShowFood *)showfood{
+    _showfood=showfood;
     [self setupView];
 }
 -(void)setupView{
     [self.foodImageView setImage:[UIImage imageNamed:@"coca"]];
     [self.contentView addSubview:self.foodImageView];
     
-    self.foodNameL.text=self.package.chosenShowFood.szDispName;
+    self.foodNameL.text=self.showfood.szDispName;
     [self.contentView addSubview:self.foodNameL];
     
-    [self.contentView addSubview:self.editBtn];
-
+  
     
-    for (int i=0; i<self.package.sameGroupFoods.count; i++) {
-        ShowFood*showfood=self.package.sameGroupFoods[i];
-        UIButton*foodBtn=[self.contentView viewWithTag:1000+i];
-        if (foodBtn) {
-            [foodBtn setImage:[UIImage imageNamed:@"coca"] forState:UIControlStateNormal];
-            [foodBtn setTitle:showfood.szDispName forState:UIControlStateNormal];
-        }else{
-            UIButton*foodBtn=[[UIButton alloc]init];
-            CGFloat space=20;
-            CGFloat w=(kScreenW-4*space)/3;
-            foodBtn.frame=CGRectMake(space+(i%3)*(w+space), 60+(i/3)*90, w, 80);
-            foodBtn.tag=1000+i;
-            [foodBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-            [self.contentView addSubview:foodBtn];
-            [foodBtn setImage:[UIImage imageNamed:@"coca"] forState:UIControlStateNormal];
-            [foodBtn setTitle:showfood.szDispName forState:UIControlStateNormal];
-            
-        }
-       
-        self.package.cellHigh=foodBtn.frame.origin.y+foodBtn.frame.size.height+10;
-        
-        
+    if (self.showfood.dwDefQuantity>1) {
+        [self.editBtn removeFromSuperview];
+        self.numL.textColor=[UIColor orangeColor];
+        self.numL.font=[UIFont systemFontOfSize:15];
+        self.numL.textAlignment=NSTextAlignmentRight;
+        self.numL.text=[NSString stringWithFormat:@"✘%ld",self.showfood.dwDefQuantity];
+        [self.contentView addSubview:self.numL];
+    }else{
+        [self.numL removeFromSuperview];
+        [self.contentView addSubview:self.editBtn];
     }
-    if (self.package.sameGroupFoods.count<1) {
-        self.package.cellHigh=50;
-    }
-    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -95,8 +79,15 @@
 -(UIButton *)editBtn{
     if (!_editBtn) {
         _editBtn=[[UIButton alloc]initWithFrame:CGRectMake(kScreenW-60, 10, 40, 40)];
+        _editBtn.tag=999;
         [_editBtn setImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
     }
     return _editBtn;
+}
+-(UILabel *)numL{
+    if (!_numL) {
+        _numL=[[UILabel alloc]initWithFrame:CGRectMake(kScreenW-100, 10, 80, 40)];
+    }
+    return _numL;
 }
 @end

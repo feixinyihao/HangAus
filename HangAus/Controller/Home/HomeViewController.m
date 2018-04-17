@@ -13,6 +13,9 @@
 #import "FoodPriceViewController.h"
 #import "CookWayPriceViewController.h"
 #import "OrderViewController.h"
+#import<objc/runtime.h>
+#import "ShowFood.h"
+#import <BGFMDB.h>
 @interface HomeViewController ()
 
 @end
@@ -22,6 +25,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+    
+   
+    
+    
 }
 -(void)setupUI{
     NSArray*btnArray=@[@"分类管理",@"创建套餐",@"配料价格",@"主食价格",@"烹饪价格",@"点餐"];
@@ -38,8 +45,10 @@
     }
 }
 
+
+
 -(void)optionClick:(UIButton*)button{
-   
+
     NSArray*classArray=@[@"FoodKindPropViewController",
                          @"CreatePackageViewController",
                          @"SubfoodPriceViewController",

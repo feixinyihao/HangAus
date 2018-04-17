@@ -17,5 +17,6 @@
 @property(nonatomic,assign)NSInteger dwGroupID;
 @property(nonatomic,assign)NSInteger dwDispOrder;
 
-
+//唯一约束
++(NSArray *)bg_uniqueKeys;
 @end

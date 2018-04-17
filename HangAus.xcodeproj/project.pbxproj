@@ -17,7 +17,6 @@
 		69075B55207B2FC100C4A5A8 /* ShopInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B54207B2FC100C4A5A8 /* ShopInfo.m */; };
 		69075B58207B2FDA00C4A5A8 /* CellWithView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B57207B2FD900C4A5A8 /* CellWithView.m */; };
 		69075B5B207B304600C4A5A8 /* ChosenFoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B5A207B304600C4A5A8 /* ChosenFoodView.m */; };
-		69075B5E207B307400C4A5A8 /* DataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B5D207B307400C4A5A8 /* DataBase.m */; };
 		69075B6F207B30C800C4A5A8 /* SoldFood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B5F207B30C300C4A5A8 /* SoldFood.m */; };
 		69075B70207B30C800C4A5A8 /* ShopSubFood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B62207B30C400C4A5A8 /* ShopSubFood.m */; };
 		69075B71207B30C800C4A5A8 /* SubFood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B65207B30C500C4A5A8 /* SubFood.m */; };
@@ -49,7 +48,6 @@
 		69075BBA207B3B3800C4A5A8 /* SetSubFoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BB5207B3B3600C4A5A8 /* SetSubFoodViewController.m */; };
 		69075BBB207B3B3800C4A5A8 /* SetFlavorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BB7207B3B3700C4A5A8 /* SetFlavorViewController.m */; };
 		69075BBE207B3B7600C4A5A8 /* FoodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BBC207B3B7600C4A5A8 /* FoodTableViewCell.m */; };
-		69075BC1207B3BA400C4A5A8 /* NewFoodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BBF207B3BA300C4A5A8 /* NewFoodViewController.m */; };
 		69075BC7207B404200C4A5A8 /* SubfoodPriceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BC5207B404200C4A5A8 /* SubfoodPriceViewController.m */; };
 		69075BCA207B406C00C4A5A8 /* SubFoodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BC9207B406C00C4A5A8 /* SubFoodCell.m */; };
 		69075BCF207B46BD00C4A5A8 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BCE207B46BD00C4A5A8 /* SettingsViewController.m */; };
@@ -70,6 +68,7 @@
 		69075BFC207E08D200C4A5A8 /* PackageOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BFB207E08D200C4A5A8 /* PackageOrderViewController.m */; };
 		69719DE2207EFC7F0040B07A /* PackageExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE1207EFC7F0040B07A /* PackageExchange.m */; };
 		69719DE5207EFD7C0040B07A /* PackageExchangeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */; };
+		69719DE8208227150040B07A /* ClassDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE7208227150040B07A /* ClassDataBase.m */; };
 		6976E2CA207B1271003163C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E2C9207B1271003163C3 /* AppDelegate.m */; };
 		6976E2CD207B1271003163C3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E2CC207B1271003163C3 /* ViewController.m */; };
 		6976E2D0207B1271003163C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6976E2CE207B1271003163C3 /* Main.storyboard */; };
@@ -107,6 +106,9 @@
 		6976E363207B1EDF003163C3 /* StaffInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E362207B1EDE003163C3 /* StaffInfo.m */; };
 		6976E369207B22B8003163C3 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E367207B22B8003163C3 /* BaseNavigationController.m */; };
 		6976E36C207B22E6003163C3 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E36A207B22E5003163C3 /* LoginViewController.m */; };
+		69A6D22B2084900A007B4E31 /* UIView+cxr.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22A2084900A007B4E31 /* UIView+cxr.m */; };
+		69A6D22E2085BD8C007B4E31 /* PackageBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22D2085BD8C007B4E31 /* PackageBtn.m */; };
+		69A6D2312085CF87007B4E31 /* SubfoodBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D2302085CF87007B4E31 /* SubfoodBtn.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -147,8 +149,6 @@
 		69075B57207B2FD900C4A5A8 /* CellWithView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellWithView.m; sourceTree = "<group>"; };
 		69075B59207B304600C4A5A8 /* ChosenFoodView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChosenFoodView.h; sourceTree = "<group>"; };
 		69075B5A207B304600C4A5A8 /* ChosenFoodView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChosenFoodView.m; sourceTree = "<group>"; };
-		69075B5C207B307400C4A5A8 /* DataBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBase.h; sourceTree = "<group>"; };
-		69075B5D207B307400C4A5A8 /* DataBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBase.m; sourceTree = "<group>"; };
 		69075B5F207B30C300C4A5A8 /* SoldFood.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoldFood.m; sourceTree = "<group>"; };
 		69075B60207B30C300C4A5A8 /* ShowFood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowFood.h; sourceTree = "<group>"; };
 		69075B61207B30C300C4A5A8 /* SubFood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFood.h; sourceTree = "<group>"; };
@@ -211,8 +211,6 @@
 		69075BB8207B3B3800C4A5A8 /* SetFlavorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetFlavorViewController.h; sourceTree = "<group>"; };
 		69075BBC207B3B7600C4A5A8 /* FoodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodTableViewCell.m; sourceTree = "<group>"; };
 		69075BBD207B3B7600C4A5A8 /* FoodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoodTableViewCell.h; sourceTree = "<group>"; };
-		69075BBF207B3BA300C4A5A8 /* NewFoodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewFoodViewController.m; sourceTree = "<group>"; };
-		69075BC0207B3BA400C4A5A8 /* NewFoodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewFoodViewController.h; sourceTree = "<group>"; };
 		69075BC5207B404200C4A5A8 /* SubfoodPriceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubfoodPriceViewController.m; sourceTree = "<group>"; };
 		69075BC6207B404200C4A5A8 /* SubfoodPriceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubfoodPriceViewController.h; sourceTree = "<group>"; };
 		69075BC8207B406B00C4A5A8 /* SubFoodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubFoodCell.h; sourceTree = "<group>"; };
@@ -253,6 +251,8 @@
 		69719DE1207EFC7F0040B07A /* PackageExchange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageExchange.m; sourceTree = "<group>"; };
 		69719DE3207EFD7C0040B07A /* PackageExchangeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageExchangeCell.h; sourceTree = "<group>"; };
 		69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageExchangeCell.m; sourceTree = "<group>"; };
+		69719DE6208227150040B07A /* ClassDataBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassDataBase.h; sourceTree = "<group>"; };
+		69719DE7208227150040B07A /* ClassDataBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassDataBase.m; sourceTree = "<group>"; };
 		6976E2C5207B1271003163C3 /* HangAus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangAus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6976E2C8207B1271003163C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6976E2C9207B1271003163C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -333,6 +333,12 @@
 		6976E368207B22B8003163C3 /* BaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavigationController.h; sourceTree = "<group>"; };
 		6976E36A207B22E5003163C3 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		6976E36B207B22E6003163C3 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		69A6D2292084900A007B4E31 /* UIView+cxr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+cxr.h"; sourceTree = "<group>"; };
+		69A6D22A2084900A007B4E31 /* UIView+cxr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+cxr.m"; sourceTree = "<group>"; };
+		69A6D22C2085BD8C007B4E31 /* PackageBtn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageBtn.h; sourceTree = "<group>"; };
+		69A6D22D2085BD8C007B4E31 /* PackageBtn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageBtn.m; sourceTree = "<group>"; };
+		69A6D22F2085CF87007B4E31 /* SubfoodBtn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubfoodBtn.h; sourceTree = "<group>"; };
+		69A6D2302085CF87007B4E31 /* SubfoodBtn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubfoodBtn.m; sourceTree = "<group>"; };
 		A7EBEE5FD63C2447B67250F9 /* libPods-HangAus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HangAus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -487,8 +493,6 @@
 		6976E304207B164C003163C3 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				69075BC0207B3BA400C4A5A8 /* NewFoodViewController.h */,
-				69075BBF207B3BA300C4A5A8 /* NewFoodViewController.m */,
 				69075BEB207C5B2100C4A5A8 /* EditFoodViewController.h */,
 				69075BEC207C5B2100C4A5A8 /* EditFoodViewController.m */,
 				69075BCC207B466700C4A5A8 /* Settings */,
@@ -595,8 +599,14 @@
 				69075BE2207B5A4800C4A5A8 /* ChosenFoodPropView.m */,
 				69075BF4207DA22700C4A5A8 /* FlavorButton.h */,
 				69075BF5207DA22700C4A5A8 /* FlavorButton.m */,
+				69A6D22F2085CF87007B4E31 /* SubfoodBtn.h */,
+				69A6D2302085CF87007B4E31 /* SubfoodBtn.m */,
 				69719DE3207EFD7C0040B07A /* PackageExchangeCell.h */,
 				69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */,
+				69A6D2292084900A007B4E31 /* UIView+cxr.h */,
+				69A6D22A2084900A007B4E31 /* UIView+cxr.m */,
+				69A6D22C2085BD8C007B4E31 /* PackageBtn.h */,
+				69A6D22D2085BD8C007B4E31 /* PackageBtn.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -645,8 +655,8 @@
 				6976E315207B188F003163C3 /* MJRefresh */,
 				6976E313207B187C003163C3 /* UniHttpTool.h */,
 				6976E312207B187C003163C3 /* UniHttpTool.m */,
-				69075B5C207B307400C4A5A8 /* DataBase.h */,
-				69075B5D207B307400C4A5A8 /* DataBase.m */,
+				69719DE6208227150040B07A /* ClassDataBase.h */,
+				69719DE7208227150040B07A /* ClassDataBase.m */,
 				69075BDD207B59EE00C4A5A8 /* JhtAnimationTools.h */,
 				69075BDC207B59EE00C4A5A8 /* JhtAnimationTools.m */,
 			);
@@ -965,10 +975,11 @@
 				69075B70207B30C800C4A5A8 /* ShopSubFood.m in Sources */,
 				69075B75207B30C800C4A5A8 /* CookWay.m in Sources */,
 				6976E350207B188F003163C3 /* MJRefreshNormalHeader.m in Sources */,
-				69075BC1207B3BA400C4A5A8 /* NewFoodViewController.m in Sources */,
 				69075B55207B2FC100C4A5A8 /* ShopInfo.m in Sources */,
+				69A6D22B2084900A007B4E31 /* UIView+cxr.m in Sources */,
 				6976E351207B188F003163C3 /* MJRefreshStateHeader.m in Sources */,
 				69075BE1207B5A0300C4A5A8 /* CartView.m in Sources */,
+				69A6D22E2085BD8C007B4E31 /* PackageBtn.m in Sources */,
 				6976E347207B188F003163C3 /* UIScrollView+MJExtension.m in Sources */,
 				69075B82207B312000C4A5A8 /* ShowGroup.m in Sources */,
 				69075B97207B32A600C4A5A8 /* TradingHourCell.m in Sources */,
@@ -990,6 +1001,7 @@
 				69075BDE207B59EF00C4A5A8 /* JhtAnimationTools.m in Sources */,
 				69075B40207B262F00C4A5A8 /* StaffToken.m in Sources */,
 				69719DE2207EFC7F0040B07A /* PackageExchange.m in Sources */,
+				69719DE8208227150040B07A /* ClassDataBase.m in Sources */,
 				69075B94207B328B00C4A5A8 /* WeekSelectViewController.m in Sources */,
 				6976E35E207B18A1003163C3 /* MBProgressHUD.m in Sources */,
 				69075BBB207B3B3800C4A5A8 /* SetFlavorViewController.m in Sources */,
@@ -997,7 +1009,6 @@
 				6976E34F207B188F003163C3 /* MJRefreshAutoNormalFooter.m in Sources */,
 				69075BF3207D953400C4A5A8 /* OrderInfo.m in Sources */,
 				69075BF6207DA22700C4A5A8 /* FlavorButton.m in Sources */,
-				69075B5E207B307400C4A5A8 /* DataBase.m in Sources */,
 				6976E348207B188F003163C3 /* NSBundle+MJRefresh.m in Sources */,
 				69075B52207B2FAB00C4A5A8 /* WithTextCell.m in Sources */,
 				6976E34E207B188F003163C3 /* MJRefreshAutoGifFooter.m in Sources */,
@@ -1024,6 +1035,7 @@
 				69075B4C207B2E1C00C4A5A8 /* SetupFoodKindViewController.m in Sources */,
 				69075B79207B30F200C4A5A8 /* ChoseSubFoodView.m in Sources */,
 				69075B43207B2A6700C4A5A8 /* ChangePswViewController.m in Sources */,
+				69A6D2312085CF87007B4E31 /* SubfoodBtn.m in Sources */,
 				69075B6F207B30C800C4A5A8 /* SoldFood.m in Sources */,
 				69075B91207B320400C4A5A8 /* ChangeBalanceCell.m in Sources */,
 				69075B76207B30C800C4A5A8 /* ShowFood.m in Sources */,

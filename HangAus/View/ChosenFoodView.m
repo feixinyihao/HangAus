@@ -8,9 +8,9 @@
 
 #import "ChosenFoodView.h"
 #import "ChosenFood.h"
-#import "DataBase.h"
 #import "CustomButton.h"
 #import "ShowFood.h"
+#import <BGFMDB.h>
 @implementation ChosenFoodView
 
 -(instancetype)initWithFrame:(CGRect)frame chosenFoods:(NSArray*)chosenFoods{
@@ -44,7 +44,8 @@
             ChosenFood*chosenFood=chosenFoods[i];
             CustomButton*nameBtn=[[CustomButton alloc]init];
             nameBtn.tag=i+1000;
-            ShowFood*showfood=[[DataBase sharedDataBase]getShowFoodWithID:chosenFood.dwShowFoodID];
+            NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenFood.dwShowFoodID))]];
+            ShowFood*showfood=[array firstObject];
             CGSize textSzie=[showfood.szDispName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:10]}];
             CGSize size=CGSizeMake(textSzie.width+20, textSzie.height);
             if ((20+rect.origin.x+rect.size.width+size.width)>self.bounds.size.width) {

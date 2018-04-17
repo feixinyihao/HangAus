@@ -11,8 +11,8 @@
 #import "ShopSubFood.h"
 #import "SubFoodCell.h"
 #import <MJExtension.h>
-#import "DataBase.h"
 #import "MBProgressHUD+MJ.h"
+#import <BGFMDB.h>
 @interface SubfoodPriceViewController ()<UITableViewDelegate,UITableViewDataSource,SubFoodCellDelegate>
 @property(nonatomic,weak)UITableView*tableView;
 @property(nonatomic,strong)NSArray*subfoodArray;
@@ -27,20 +27,19 @@
     self.title=@"修改价格";
 }
 -(void)setupFromDataBase{
-    if ([[DataBase sharedDataBase]getAllShopSubFood].count>0) {
-        self.subfoodArray=[[DataBase sharedDataBase]getAllShopSubFood];
+    if ([ShopSubFood bg_findAll:nil].count>0) {
+        self.subfoodArray=[ShopSubFood bg_findAll:nil];
     }else{
         [self setupData];
     }
 }
 -(void)setupData{
     [MBProgressHUD showHUDAddedTo:nil animated:YES];
-    [[DataBase sharedDataBase]deleteAllShopSubFood];
     [UniHttpTool getwithparameters:nil option:GetShopSubFood success:^(id json) {
         NSMutableArray*temp=[NSMutableArray array];
         for (NSDictionary*dict in json[@"data"]) {
             ShopSubFood*subfood=[ShopSubFood mj_objectWithKeyValues:dict];
-            [[DataBase sharedDataBase]addShopShowFood:subfood];
+            [subfood bg_saveOrUpdate];
             [temp addObject:subfood];
         }
         self.subfoodArray=temp;
@@ -78,13 +77,13 @@
 -(void)SubFoodCellBtnClick:(UIButton *)button withCell:(SubFoodCell *)cell withStr:(NSString *)str{
     NSIndexPath*indexPath=[self.tableView indexPathForCell:cell];
     ShopSubFood*subfood=self.subfoodArray[indexPath.row];
-    NSDictionary*parm=[subfood mj_keyValues];
-    [parm setValue:[NSString stringWithFormat:@"%.f",[str floatValue]*100] forKey:@"dwUnitPrice"];
-    [UniHttpTool getwithparameters:parm option:SetShopSubFood success:^(id json) {
-        if ([json[@"ret"] integerValue]==0) {
-            NSDictionary*dict=json[@"data"];
-            subfood.dwUnitPrice=[dict[@"dwUnitPrice"] integerValue];
-        }
+  //  NSDictionary*parm=[subfood mj_keyValues];
+    NSDictionary*parm=@{@"dwSFID":@(subfood.dwSFID),
+                        @"dwUnitPrice":@(roundf([str floatValue]*100)),
+                        @"szMemo":@""
+                        };
+    [UniHttpTool getwithparameters:parm option:SetShopsubfoodprice success:^(id json) {
+        
     }];
     
 }

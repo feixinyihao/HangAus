@@ -12,6 +12,7 @@
 #import <MJExtension.h>
 #import "LoginViewController.h"
 #import "BaseNavigationController.h"
+#import<CommonCrypto/CommonDigest.h>
 @implementation CommonFunc
 
 /** @brief Returns a customized snapshot of a given view. */
@@ -112,7 +113,7 @@
         [MBProgressHUD showError:dic[@"detail"]];
     }else{
         [MBProgressHUD hideHUD];
-        if ([code integerValue]==2000003||[code integerValue]==2000004||[code integerValue]==2000005) {
+        if ([code integerValue]==2000003||[code integerValue]==2000004||[code integerValue]==2000005||[code integerValue]==2000007) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 UIWindow * window = [[UIApplication sharedApplication] keyWindow];
                 LoginViewController*login=[[LoginViewController alloc]init];
@@ -206,5 +207,33 @@
        
     }
     return [NSString stringWithFormat:@"[%@]",[arrTemp componentsJoinedByString:@","]];
+}
++ (long long)getCurrentDate
+{
+    
+    return [[NSDate date] timeIntervalSince1970];
+}
++ (long long)getTimestanps:(NSString*)time
+{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
+    NSDate *date1=[dateFormatter dateFromString:time];
+    
+    return [date1 timeIntervalSince1970];
+    
+}
+
++ (NSString *) md5:(NSString *) input {
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( cStr, strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
 }
 @end

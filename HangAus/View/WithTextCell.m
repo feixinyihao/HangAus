@@ -10,11 +10,13 @@
 #import "CellWithView.h"
 #import <UIImageView+WebCache.h>
 #import "ChosenFoodView.h"
-#import "DataBase.h"
-#import "SubFood.h"
+#import "ShopSubFood.h"
+#import "ShopFlavor.h"
+#import "ShopCookway.h"
 #import "UniHttpTool.h"
 #import <MJExtension.h>
 #import "ChoseSubFoodView.h"
+#import <BGFMDB.h>
 @interface WithTextCell()<UITextFieldDelegate,ChosenFoodViewDelegate,ChoseSubFoodViewDelegate>
 @property(nonatomic,strong)UILabel*label;
 @property(nonatomic,strong)UITextField*textField;
@@ -66,7 +68,7 @@
         if (self.cellWithView.prop) {
             switch (self.cellWithView.propNum) {
                 case 1:
-                     self.detailTextLabel.text=[self stringFromFSubFoodProp];
+                     self.detailTextLabel.text=[self stringFromSubfood];
                     break;
                 case 2:
                      self.detailTextLabel.text=[self stringFromFlavorProp];
@@ -81,7 +83,6 @@
         }else{
             self.detailTextLabel.text=self.cellWithView.text;
         }
-        
         self.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
         
     }else if ([NSStringFromClass([UITextField class]) isEqualToString:self.cellWithView.viewClass]){
@@ -103,10 +104,15 @@
         [self.foodView removeFromSuperview];
         [self.textField removeFromSuperview];
         if (self.cellWithView.imagePath) {
-            [self.rightImageView sd_setImageWithURL:[NSURL URLWithString:self.cellWithView.imagePath]];
+            [self.rightImageView sd_setImageWithURL:[NSURL URLWithString:self.cellWithView.imagePath] placeholderImage:[UIImage imageNamed:@"coca"] options:SDWebImageRefreshCached];
         }else{
             [self.rightImageView setImage:[UIImage imageNamed:self.cellWithView.imageName]];
         }
+       
+
+        //[self.rightImageView setImage:[UIImage imageNamed:self.cellWithView.imageName]];
+      
+       
         self.rightImageView.frame=CGRectMake(kScreenW-50, 10, 40, 40);
         [self.contentView addSubview:self.rightImageView];
     }else if (self.cellWithView.chosenFoods!=NULL){
@@ -129,7 +135,6 @@
         [self.textField removeFromSuperview];
         [self.imageView removeFromSuperview];
     }
-   
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -141,73 +146,30 @@
     }
 }
 
--(void)stringFromFSubFoodPropcomplete:(void (^)(NSString* str))complete{
-    [UniHttpTool getwithparameters:nil option:GetSubFood success:^(id json) {
-        if ([json[@"ret"]integerValue]==0) {
-            NSMutableArray*temp=[NSMutableArray array];
-            for (NSDictionary*dict in json[@"data"]) {
-                SubFood*subfood=[SubFood mj_objectWithKeyValues:dict];
-                [[DataBase sharedDataBase]addSubFood:subfood];
-                [temp addObject:subfood];
-            }
-            NSString*str=@"";
-            if (self.cellWithView.prop) {
-                for (int i=1; i<=pow(2, temp.count-1); i++) {
-                    if (((i-1)&i)==0) {
-                        if ((self.cellWithView.prop&i)==i) {
-                            NSInteger x=log2(i);
-                            SubFood*subFood=temp[x];
-                            str=[str stringByAppendingFormat:@"%@,",subFood.szName];
-                            
-                        }
-                    }
-                }
-                if (complete) {
-                    complete([str substringToIndex:str.length-1]);
-                }
-            }else{
-                complete(@"编辑");
-            }
-        }
-    }];
-}
--(NSString*)stringFromFSubFoodProp{
-    
-    NSArray*subFoodArray=[[DataBase sharedDataBase]getAllSubFood];
-    if (subFoodArray.count<1) {
-        [self stringFromFSubFoodPropcomplete:^(NSString *str) {
-             self.detailTextLabel.text=str;
-        }];
-        return @"";
-    }else{
-        NSString*str=@"";
-        if (self.cellWithView.prop) {
-            for (int i=0; i<subFoodArray.count; i++) {
-                SubFood*subfood=subFoodArray[i];
-                if ((self.cellWithView.prop&subfood.dwSFID)==subfood.dwSFID) {
-                    str=[str stringByAppendingString:[NSString stringWithFormat:@"%@,",subfood.szName]];
-                }
-            }
-            return [str substringToIndex:str.length-1];
-        }else{
-            return @"编辑";
-        }
-        
-    }
-    
-   
-}
--(NSString*)stringFromFlavorProp{
-    NSArray*array=@[@"Cook Level",@"In Batter",@"Crumbed",@"Salt",@"Chicken Salt",@"Vinega",@"Sauce",@"Flour"];
-    NSString*str=@"";
+-(NSString*)stringFromSubfood{
+    NSArray*subfoodArray=[ShopSubFood bg_findAll:nil];
+    NSString*result=@",";
     if (self.cellWithView.prop) {
-        for (int i=1; i<=128; i++) {
-            if (((i-1)&i)==0) {
-                if ((self.cellWithView.prop&i)==i) {
-                    NSInteger x=log2(i);
-                    str=[str stringByAppendingFormat:@"%@,",array[x]];
-                   
-                }
+        for (int i=0; i<subfoodArray.count; i++) {
+            ShopSubFood*subfood=subfoodArray[i];
+            if ((self.cellWithView.prop&subfood.dwSFID)==subfood.dwSFID) {
+                result=[result stringByAppendingFormat:@"%@,",subfood.szName];
+            }
+        }
+        return [result substringToIndex:result.length-1];
+    }else{
+        return @"编辑";
+    }
+}
+
+-(NSString*)stringFromFlavorProp{
+    NSArray*array=[ShopFlavor bg_findAll:nil];
+    NSString*str=@",";
+    if (self.cellWithView.prop) {
+        for (int i=0; i<array.count; i++) {
+            ShopFlavor*flavor=array[i];
+            if ((self.cellWithView.prop&flavor.dwFVID)==flavor.dwFVID) {
+                [str stringByAppendingFormat:@"%@,",flavor.szName];
             }
         }
         return [str substringToIndex:str.length-1];
@@ -216,19 +178,15 @@
     }
 }
 -(NSString*)stringFromCookWayProp{
-    NSString*str=@"";
+
+    NSArray*array=[ShopCookway bg_findAll:nil];
+    NSString*str=@",";
     if (self.cellWithView.prop) {
-        if ((self.cellWithView.prop&1)==1) {
-            str=[str stringByAppendingString:@"Fried,"];
-        }
-        if ((self.cellWithView.prop&2)==2) {
-            str=[str stringByAppendingString:@"Grilled,"];
-        }
-        if ((self.cellWithView.prop&4)==4) {
-            str=[str stringByAppendingString:@"Steamed,"];
-        }
-        if ((self.cellWithView.prop&8)==8) {
-            str=[str stringByAppendingString:@"Grilled,"];
+        for (int i=0; i<array.count; i++) {
+            ShopCookway*cookway=array[i];
+            if ((self.cellWithView.prop&cookway.dwCWID)==cookway.dwCWID) {
+                [str stringByAppendingFormat:@"%@,",cookway.szName];
+            }
         }
         return [str substringToIndex:str.length-1];
     }else{
@@ -275,7 +233,7 @@
     }
 }
 -(void)ChoseSubFoodViewBtnClick:(UIButton *)button withincSubfood:(NSInteger)incSubfood{
-    DLog(@"%ld",incSubfood);
+
     if ([self.delegate respondsToSelector:@selector(reloadTotalPrice:)]) {
         [self.delegate reloadTotalPrice:incSubfood];
     }

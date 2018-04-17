@@ -10,4 +10,7 @@
 
 @implementation ShopCookway
 
++(NSArray *)bg_unionPrimaryKeys{
+    return @[@"dwCWID",@"dwShopID"];
+}
 @end
