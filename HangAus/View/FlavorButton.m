@@ -28,8 +28,13 @@
 -(NSString*)fromValue:(NSInteger)value{
     if (value==0) {
         return  @"-";
-    }else if (self.value==1){
-        return @"+";
+    }else if (value==1){
+        if (self.shopflavor.dwDefValue==0&&self.shopflavor.dwUnitPrice>0) {
+            return [NSString stringWithFormat:@"+$%.2f",self.shopflavor.dwUnitPrice/100.0];
+        }else{
+            return @"+";
+        }
+       
     }else if (value==2){
         return @"++";
     }else if (value==3){
@@ -43,6 +48,9 @@
         [self setValue:self.shopflavor.dwMinValue];
     }else{
         [self setValue:self.value+1];
+    }
+    if ([self.delegate respondsToSelector:@selector(FlavorButtonClick:)]) {
+        [self.delegate FlavorButtonClick:self];
     }
 }
 -(void)setValue:(NSInteger)value{

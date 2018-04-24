@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ShopSubFood,SubFoodCell,SoldFood,ShopCookway;
+@class ShopSubFood,SubFoodCell,SoldFood,ShopCookway,ShopFlavor;
 @protocol SubFoodCellDelegate <NSObject>
 
 @optional
@@ -18,6 +18,7 @@
 @property(nonatomic,strong)ShopSubFood* subfood;
 @property(nonatomic,strong)SoldFood*soldfood;
 @property(nonatomic,strong)ShopCookway*cookway;
+@property(nonatomic,strong)ShopFlavor*shopFlavor;
 +(SubFoodCell*)initWithTableView:(UITableView*)tableView;
 @property(nonatomic,strong)id <SubFoodCellDelegate>delegate;
 @end

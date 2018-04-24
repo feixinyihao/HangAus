@@ -23,6 +23,15 @@
 @property(nonatomic,strong)NSArray*cellModelArray;
 
 @property(nonatomic,assign)NSInteger incSubfood;
+/**
+ showgroup数组
+ */
+@property(nonatomic,strong)NSMutableArray*showGroupArray;
+
+/**
+showfood数组
+*/
+@property(nonatomic,strong)NSArray*showFoodArray;
 
 /**
  pick显示的分类名称数组
@@ -34,7 +43,7 @@
  */
 @property(nonatomic,strong)NSArray*showFoodNameArray;
 
-@property(nonatomic,strong)NSArray*showGroupArray;
+
 
 @property(nonatomic,strong)NSArray*lastSelRows;
 @end
@@ -51,7 +60,36 @@
     [self setupArray];
 }
 -(void)setupArray{
-   
+    self.showGroupArray=[NSMutableArray arrayWithArray:[ShowGroup bg_findAll:nil]];
+    if (self.showGroupArray.count<1) {
+        return;
+    }
+    NSMutableArray*temp=[NSMutableArray array];
+    
+    ShowGroup*showGroupTemp=[[ShowGroup alloc]init];
+    for (int i=0; i<self.showGroupArray.count; i++) {
+        ShowGroup*showGroup=self.showGroupArray[i];
+        if (showGroup.dwGroupID!=8) {
+            [temp addObject:showGroup.szGroupName];
+        }else{
+            showGroupTemp=showGroup;
+        }
+        
+    }
+    [self.showGroupArray removeObject:showGroupTemp];
+    self.groupNameArray=[NSArray array];
+    self.groupNameArray=temp;
+    
+    
+    ShowGroup*showgroup=self.showGroupArray[0];
+    self.showFoodArray=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(showgroup.dwGroupID))]];
+    
+    NSMutableArray*foodTemp=[NSMutableArray array];
+    for (int i=0; i<self.showFoodArray.count; i++) {
+        ShowFood*showfood=self.showFoodArray[i];
+        [foodTemp addObject:showfood.szDispName];
+    }
+    self.showFoodNameArray=foodTemp;
     
     
 }
@@ -87,11 +125,11 @@
     if (self.showFood.dwShowProp==1&&!self.showFood.dwIncSubFood) {
         temp=@[parm1,parm2,parm3,parm4];
     }else if (self.showFood.dwShowProp==2){
-        NSDictionary*parm5=@{@"leftTitle":@"套餐包含食物",
+        NSDictionary*parm9=@{@"leftTitle":@"套餐包含食物",
                              @"viewClass":@"UIImageView",
                              @"imageName":@"plus"};
-        NSDictionary*parm6=@{@"chosenFoods":self.showFood.ChosenFoods};
-        temp=@[parm1,parm2,parm5,parm6,parm3,parm7,parm4];
+        NSDictionary*parm10=@{@"chosenFoods":self.showFood.ChosenFoods};
+        temp=@[parm1,parm2,parm9,parm10,parm3,parm5,parm7,parm4];
     }else if (self.showFood.dwIncSubFood){
          NSDictionary*parm8=@{@"leftTitle":@"配菜",
                               @"subfoodprop":@(self.showFood.dwSubFoodProp),
@@ -168,7 +206,7 @@
         
         [self presentViewController:pick animated:YES completion:nil];
       
-    }else if (indexPath.row==2){
+    }else if (indexPath.row==2&&self.showFood.dwShowProp==2){
         XXPickerView *picker = [[XXPickerView alloc] initWithTitle:@"添加套餐食物" delegate:self];
         picker.toolbarTintColor=KmainColor;
         picker.toolbarButtonColor=[UIColor whiteColor];
@@ -223,9 +261,9 @@
         }
         
     }
-    CellWithView*cellmodel5=self.cellModelArray[5];
-    cellmodel5.text=[NSString stringWithFormat:@"%.1f0",total/100.0];
-    NSIndexPath*indexpath=[NSIndexPath indexPathForRow:5 inSection:0];
+    CellWithView*cellmodel6=self.cellModelArray[6];
+    cellmodel6.text=[NSString stringWithFormat:@"%.1f0",total/100.0];
+    NSIndexPath*indexpath=[NSIndexPath indexPathForRow:6 inSection:0];
     NSArray<NSIndexPath*>*indexPathArray=@[indexpath];
     [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
 }
@@ -286,13 +324,33 @@
                                         };
                     [UniHttpTool getwithparameters:dict option:SetShowfoodprice success:^(id json) {
                         NSDictionary*dataDic=json[@"data"];
-                        self.showFood.dwIncSubFood=[dataDic[@"dwIncSubFood"] integerValue];
-                        self.showFood.dwMinPrice=[dataDic[@"dwMinPrice"] integerValue];
-                        self.showFood.dwTotalPrice=[dataDic[@"dwTotalPrice"] integerValue];
-                        self.showFood.dwSoldPrice=[dataDic[@"dwSoldPrice"] integerValue];
+                        ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:dataDic];
+                        self.showFood.dwIncSubFood=resultShowfood.dwIncSubFood;
+                        self.showFood.dwMinPrice=resultShowfood.dwMinPrice;
+                        self.showFood.dwTotalPrice=resultShowfood.dwTotalPrice;
+                        self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+                        [resultShowfood bg_saveOrUpdate];
+                        
                         [self.navigationController popViewControllerAnimated:YES];
                     }];
                     
+                }];
+            }else{
+                NSDictionary*dict=@{@"dwShowFoodID":@(self.showFood.dwShowFoodID),
+                                    @"dwSoldPrice":@(sellPrice),
+                                    @"dwMinPrice":@(minPrice),
+                                    @"dwUnitPrice":@(self.showFood.dwUnitPrice)
+                                    };
+                [UniHttpTool getwithparameters:dict option:SetShowfoodprice success:^(id json) {
+                    NSDictionary*dataDic=json[@"data"];
+                    ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:dataDic];
+                    self.showFood.dwIncSubFood=resultShowfood.dwIncSubFood;
+                    self.showFood.dwMinPrice=resultShowfood.dwMinPrice;
+                    self.showFood.dwTotalPrice=resultShowfood.dwTotalPrice;
+                    self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+                    [resultShowfood bg_saveOrUpdate];
+                    
+                    [self.navigationController popViewControllerAnimated:YES];
                 }];
             }
             
@@ -304,8 +362,10 @@
         
         CellWithView*model4=self.cellModelArray[4];
         CellWithView*model5=self.cellModelArray[5];
+        CellWithView*model6=self.cellModelArray[6];
         sellPrice=[model4.text floatValue]*100;
-        total=[model5.text floatValue]*100;
+        minPrice=[model5.text floatValue]*100;
+        total=[model6.text floatValue]*100;
         DLog(@"%ld--%ld",total,sellPrice);
        
         if (sellPrice>total) {
@@ -321,11 +381,24 @@
                     [temp addObject:chosenfood];
                 }
                 [MBProgressHUD showText:@"保存成功"];
-                self.showFood.dwUnitPrice=[dict[@"dwUnitPrice"] integerValue];
-                self.showFood.dwDiscount=[dict[@"dwDiscount"] integerValue];
-                self.showFood.dwMinPrice=[dict[@"dwMinPrice"] integerValue];
+              
                 self.showFood.ChosenFoods=temp;
-                [self.navigationController popViewControllerAnimated:YES];
+                NSDictionary*dic=@{@"dwShowFoodID":@(self.showFood.dwShowFoodID),
+                                    @"dwSoldPrice":@(sellPrice),
+                                    @"dwMinPrice":@(minPrice),
+                                    };
+                [UniHttpTool getwithparameters:dic option:SetShowfoodprice success:^(id json) {
+                    ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:json[@"data"]];
+                    self.showFood.dwIncSubFood=resultShowfood.dwIncSubFood;
+                    self.showFood.dwMinPrice=resultShowfood.dwMinPrice;
+                    self.showFood.dwTotalPrice=resultShowfood.dwTotalPrice;
+                    self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+                    [resultShowfood bg_saveOrUpdate];
+                    
+                    self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+               
 
             }];
         }
@@ -337,8 +410,15 @@
                             @"dwUnitPrice":@(self.showFood.dwUnitPrice)
                             };
         [UniHttpTool getwithparameters:dict option:SetShowfoodprice success:^(id json) {
-            NSDictionary*dataDict=json[@"data"];
-            self.showFood.dwSoldPrice=[dataDict[@"dwSoldPrice"] integerValue];
+            ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:json[@"data"]];
+            self.showFood.dwIncSubFood=resultShowfood.dwIncSubFood;
+            self.showFood.dwMinPrice=resultShowfood.dwMinPrice;
+            self.showFood.dwTotalPrice=resultShowfood.dwTotalPrice;
+            self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+            [resultShowfood bg_saveOrUpdate];
+            
+            self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+            [self.navigationController popViewControllerAnimated:YES];
             [self.navigationController popViewControllerAnimated:YES];
             
         }];
@@ -353,11 +433,83 @@
                             @"dwMinPrice":@(sellPrice),
                             };
         [UniHttpTool getwithparameters:dict option:SetShowfoodprice success:^(id json) {
-            DLog(@"%@",json);
-            NSDictionary*dict=json[@"data"];
-            self.showFood.dwSoldPrice=[dict[@"dwSoldPrice"] integerValue];
+            ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:json[@"data"]];
+            self.showFood.dwIncSubFood=resultShowfood.dwIncSubFood;
+            self.showFood.dwMinPrice=resultShowfood.dwMinPrice;
+            self.showFood.dwTotalPrice=resultShowfood.dwTotalPrice;
+            self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
+            [resultShowfood bg_saveOrUpdate];
+            
+            self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
             [self.navigationController popViewControllerAnimated:YES];
         }];
     }
+}
+
+
+- (void)xxPickerView:(XXPickerView *)pickerView didSelectTitles:(NSArray *)titles selectedRows:(NSArray *)rows{
+    ShowFood*showfood=[self.showFoodArray objectAtIndex:[rows[1] integerValue]];
+    
+    ChosenFood*chosenfood=[[ChosenFood alloc]init];
+    chosenfood.dwShowFoodID=showfood.dwShowFoodID;
+    chosenfood.dwCookWayProp=showfood.dwCookWayProp;
+    chosenfood.dwSubFoodProp=showfood.dwSubFoodProp;
+    chosenfood.dwFlavorProp=showfood.dwFlavorProp;
+  
+    chosenfood.dwQuantity=showfood.dwDefQuantity;
+    chosenfood.szMemo=showfood.szMemo;
+    
+    chosenfood.dwDispOrder=1;
+    chosenfood.dwParentID=self.showFood.dwShowFoodID;
+    
+    CellWithView*cell3=self.cellModelArray[3];
+    NSMutableArray*temp=[NSMutableArray arrayWithArray:cell3.chosenFoods];
+    [temp addObject:chosenfood];
+    cell3.chosenFoods=temp;
+    DLog(@"%ld",temp.count);
+    
+    CellWithView*cell6=self.cellModelArray[6];
+    cell6.text=[self returnPriceFromChosenFood:temp];
+    
+    [self.tableView reloadData];
+    
+}
+- (void)xxPickerView:(XXPickerView *)pickerView didChangeRow:(NSInteger)row inComponent:(NSInteger)component{
+    self.lastSelRows=@[@(row),@(component)];
+    DLog(@"%ld--%ld",row,component);
+    if (component==0) {
+        self.lastSelRows=@[@(row),@(0)];
+        ShowGroup*showgroup=self.showGroupArray[row];
+        self.showFoodArray=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(showgroup.dwGroupID))]];
+        
+        NSMutableArray*foodTemp=[NSMutableArray array];
+        for (int i=0; i<self.showFoodArray.count; i++) {
+            ShowFood*showfood=self.showFoodArray[i];
+            [foodTemp addObject:showfood.szDispName];
+        }
+        self.showFoodNameArray=foodTemp;
+        [pickerView setTitlesForComponents:@[self.groupNameArray,self.showFoodNameArray]];
+        [pickerView reloadComponent:1];
+    }
+    if (component==1) {
+        self.lastSelRows=@[self.lastSelRows[0],@(row)];
+    }
+}
+-(NSString*)returnPriceFromChosenFood:(NSArray*)chosenfoods{
+    
+    NSInteger price=0;
+    for (int i=0; i<chosenfoods.count; i++) {
+        ChosenFood*chosenfood=chosenfoods[i];
+        NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
+        ShowFood*chosenShowfood=[array firstObject];
+        if (chosenShowfood.dwSoldProp==2) {
+            price=price+chosenfood.dwQuantity*chosenShowfood.dwUnitPrice/1000;
+        }else{
+            price=price+chosenShowfood.dwSoldPrice*chosenfood.dwQuantity;
+        }
+        DLog(@"****%ld****",price);
+        
+    }
+    return [NSString stringWithFormat:@"%.1f0",price/100.0];
 }
 @end

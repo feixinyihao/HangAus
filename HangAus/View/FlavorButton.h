@@ -7,10 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ShopFlavor;
+@class ShopFlavor,FlavorButton;
+
+@protocol FlavorButtonDelegate <NSObject>
+
+@optional
+-(void)FlavorButtonClick:(FlavorButton*)button;
+
+@end
+
 @interface FlavorButton : UIButton
 
 @property(nonatomic,strong)ShopFlavor*shopflavor;
 @property(nonatomic,assign)NSInteger value;
 
+@property(nonatomic,strong)id <FlavorButtonDelegate>delegate;
 @end

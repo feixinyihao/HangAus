@@ -201,10 +201,9 @@
         NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
         ShowFood*chosenShowfood=[array firstObject];
         if (chosenShowfood.dwSoldProp==2) {
-            chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
-            price=price+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO];
+            price=price+chosenShowfood.dwUnitPrice*chosenfood.dwQuantity/1000;
         }else{
-            price=price+[self returnPriceFromShowFood:chosenShowfood isDiscount:NO]*chosenfood.dwQuantity;
+            price=price+chosenShowfood.dwSoldPrice*chosenfood.dwQuantity;
         }
         
     }
@@ -343,11 +342,10 @@
     chosenfood.dwCookWayProp=showfood.dwCookWayProp;
     chosenfood.dwSubFoodProp=showfood.dwSubFoodProp;
     chosenfood.dwFlavorProp=showfood.dwFlavorProp;
-    chosenfood.dwQuantity=1;
+    chosenfood.dwQuantity=showfood.dwDefQuantity;
     chosenfood.szMemo=showfood.szMemo;
     
     chosenfood.dwDispOrder=1;
-   // chosenfood.dwParentID=tempshowfood.dwShowFoodID+1;
     
     [self.selectedChosenFood addObject:chosenfood];
     CellWithView*cell5=self.modelArray[5];

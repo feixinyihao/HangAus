@@ -18,7 +18,7 @@
 #import "UniHttpTool.h"
 #import <MJExtension.h>
 #import "SubfoodBtn.h"
-@interface ChosenFoodPropView()
+@interface ChosenFoodPropView()<SubfoodBtnDelegate,FlavorButtonDelegate>
 @property(nonatomic,strong)ShowFood*showFood;
 @property(nonatomic,weak)UIView*backgroundView;
 @property(nonatomic,strong)NSArray*shopFlavorArray;
@@ -38,11 +38,16 @@
 @property(nonatomic,assign)BOOL isPackage;
 
 @property(nonatomic,assign)NSInteger price;
+@property(nonatomic,assign)NSInteger priceOffset;
+@property(nonatomic,assign)NSInteger cookwayPrice;
+
 @end
 @implementation ChosenFoodPropView
 
 -(instancetype)initWithShowFood:(ShowFood*)showfood{
     if ([super init]) {
+        self.priceOffset=0;
+        self.szSelSubFood=@"";
         self.showFood=showfood;
         self.frame=[UIScreen mainScreen].bounds;
         self.backgroundColor=[[UIColor blackColor]colorWithAlphaComponent:0.5];
@@ -209,7 +214,7 @@
 }
 -(void)setupSubFood{
     UILabel*SubFoodL=[[UILabel alloc]init];
-    SubFoodL.frame=CGRectMake(10, 50, 100, 20);
+    SubFoodL.frame=CGRectMake(10, 30, 100, 20);
     SubFoodL.text=@"配菜:";
     SubFoodL.font=[UIFont systemFontOfSize:15];
     [self.backgroundView addSubview:SubFoodL];
@@ -218,51 +223,36 @@
     for (int i=0; i<self.subfoodArray.count; i++) {
         ShopSubFood*subfood=self.subfoodArray[i];
         if ((self.showFood.dwSubFoodProp&subfood.dwSFID)==subfood.dwSFID) {
-            CGSize textSzie=[subfood.szName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]}];
+            NSString*str=[subfood.szName stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+            CGSize textSzie=[str sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]}];
             if ((rect.origin.x+rect.size.width+textSzie.width+20)>self.backgroundView.bounds.size.width) {
                 line=line+1;
                 rect=CGRectZero;
             }
+            SubfoodBtn*subfoodBtn=[[SubfoodBtn alloc]initWithFrame:CGRectMake(rect.origin.x+rect.size.width+10, 60+line*50, textSzie.width+20, 35)];
+            subfoodBtn.subfood=subfood;
             
-            SubfoodBtn*subfoodBtn=[[SubfoodBtn alloc]initWithFrame:CGRectMake(rect.origin.x+rect.size.width+10, 80+line*45, textSzie.width+10, 30)];
-            [subfoodBtn setTitle:subfood.szName forState:UIControlStateNormal];
             subfoodBtn.subfoodPrice=subfood.dwUnitPrice;
-            [subfoodBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-            [subfoodBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];;
-            [subfoodBtn setBackgroundImage:[self imageWithColor:KmainColor] forState:UIControlStateSelected];
-            [subfoodBtn setBackgroundImage:[self imageWithColor:[UIColor yellowColor]] forState:UIControlStateNormal];
-            subfoodBtn.layer.masksToBounds=YES;
-            subfoodBtn.layer.cornerRadius=5;
-            subfoodBtn.titleLabel.font=[UIFont systemFontOfSize:15];
             if ((self.showFood.dwIncSubFood&subfood.dwSFID)==subfood.dwSFID) {
                 subfoodBtn.selected=YES;
                 subfoodBtn.isDefInc=YES;
+                subfoodBtn.defValue=1;
+                subfoodBtn.value=1;
+            }else{
+                subfoodBtn.value=0;
             }
+            
+            
+           
             subfoodBtn.tag=500+i;
-            [subfoodBtn addTarget:self action:@selector(subfoodBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            subfoodBtn.delegate=self;
             [self.backgroundView addSubview:subfoodBtn];
             rect=subfoodBtn.frame;
         }
     }
 }
--(void)subfoodBtnClick:(SubfoodBtn*)sender{
-    if (sender.selected) {
-        if ((self.price-sender.subfoodPrice)>self.showFood.dwMinPrice) {
-            self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.price-sender.subfoodPrice)/100.0];
-            self.price=self.price-sender.subfoodPrice;
-        }else{
-            self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwMinPrice)/100.0];
-            self.price=self.showFood.dwMinPrice;
-        }
-    }else{
-        if (!sender.isDefInc) {
-            self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwSoldPrice+sender.subfoodPrice)/100.0];
-        }
-        
-    }
-    sender.selected=!sender.selected;
-    
-}
+
+
 -(void)setupBottomWithSupView:(UIView*)supView withShowfood:(ShowFood*)showfood{
     UIView*bottomView=[[UIView alloc]initWithFrame:CGRectMake(0, supView.bounds.size.height-50, supView.bounds.size.width, 50)];
     bottomView.backgroundColor=KColor(240, 240, 240);
@@ -294,28 +284,44 @@
 -(void)order:(UIButton*)sender{
     OrderFood*orderfood=[[OrderFood alloc]init];
     if (self.showFood.dwIncSubFood) {
-        
+        orderfood.szSelFlavor=@"";
+        orderfood.szSelSubFood=[self renturnSelSubFood];
+        orderfood.dwShowFoodID=self.showFood.dwShowFoodID;
+        orderfood.dwSelCookWay=self.cookWayprop;
+        orderfood.dwFoodType=1;
+        orderfood.dwParentIndex=0;
+        orderfood.dwQuantity=1;
+        orderfood.dwFoodPrice=self.showFood.dwSoldPrice;
+        orderfood.dwCookPrice=0;
+        if (self.priceOffset>0) {
+            orderfood.dwSubFoodPrice=self.priceOffset;
+        }else{
+            orderfood.dwSubFoodPrice=0;
+        }
+        orderfood.dwFlavorPrice=0;
+        orderfood.dwFoodDiscount=0;
+        orderfood.dwSubFoodDiscount=0;
+        orderfood.szShowFoodName=self.showFood.szDispName;
+        orderfood.dwGroupID=self.showFood.dwGroupID;
     }else{
         NSString*szSelFlavor=@"";
-        for (int i=2000; i<self.shopFlavorArray.count+2000; i++) {
-            FlavorButton*button=[self.backgroundView viewWithTag:i];
-            if (button) {
-                if (button.value!=button.shopflavor.dwDefValue) {
-                    NSArray*tempArray=[button.shopflavor.szValueName componentsSeparatedByString:@";"];
+        NSInteger flavorprice=0;
+        for (FlavorButton*flvBtn in self.backgroundView.subviews) {
+            if ([flvBtn isKindOfClass:[FlavorButton class]]) {
+                if (flvBtn.value!=flvBtn.shopflavor.dwDefValue) {
+                    NSArray*tempArray=[flvBtn.shopflavor.szValueName componentsSeparatedByString:@";"];
                     for (NSString*str in tempArray) {
-                        if ([[str substringToIndex:1] integerValue]==button.value) {
-                            szSelFlavor=[szSelFlavor stringByAppendingFormat:@"%@;",[str substringFromIndex:2]];
+                        if ([[str substringToIndex:1] integerValue]==flvBtn.value) {
+                            szSelFlavor=[szSelFlavor stringByAppendingFormat:@"%@",[str substringFromIndex:2]];
                         }
+                    }
+                    if (flvBtn.value>0&&flvBtn.shopflavor.dwDefValue==0&&flvBtn.shopflavor.dwUnitPrice>0) {
+                        flavorprice=flavorprice+flvBtn.shopflavor.dwUnitPrice;
                     }
                     
                 }
             }
-            
         }
-        if (szSelFlavor.length>1) {
-            szSelFlavor=[szSelFlavor substringToIndex:szSelFlavor.length-1];
-        }
-        DLog(@"%@",szSelFlavor);
         orderfood.szSelFlavor=szSelFlavor;
         orderfood.dwShowFoodID=self.showFood.dwShowFoodID;
         orderfood.dwSelCookWay=self.cookWayprop;
@@ -325,10 +331,12 @@
         orderfood.dwFoodPrice=self.showFood.dwSoldPrice;
         orderfood.dwCookPrice=self.dwCookPrice;
         orderfood.dwSubFoodPrice=0;
-        //口味价格先不考虑
-        orderfood.dwFlavorPrice=0;
+   
+        orderfood.dwFlavorPrice=flavorprice;
         orderfood.dwFoodDiscount=0;
         orderfood.dwSubFoodDiscount=0;
+        orderfood.szShowFoodName=self.showFood.szDispName;
+        orderfood.dwGroupID=self.showFood.dwGroupID;
         
     }
     if ([self.delegate respondsToSelector:@selector(ChosenFoodPropViewOrderWithOrderFood:withIndexPath:)]) {
@@ -388,7 +396,7 @@
                     self.cookWayprop=cookway.dwCWID;
                     self.dwCookPrice=cookway.dwUnitPrice;
                     [self viewWithSupFlavor:(self.showFood.dwFlavorProp&cookway.dwSupFlavor) withbackgroundView:self.backgroundView];
-                 
+                    self.cookwayPrice=cookway.dwUnitPrice;
                     self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwSoldPrice+cookway.dwUnitPrice)/100.0];
                     
                    
@@ -412,6 +420,7 @@
         if ((FlavorProp&shopflavor.dwFVID)==shopflavor.dwFVID) {
             CGSize textSzie=[shopflavor.szName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:15]}];
             FlavorButton*propBtn=[[FlavorButton alloc]init];
+            propBtn.delegate=self;
             if ((rect.origin.x+rect.size.width+textSzie.width+20)>view.bounds.size.width) {
                 rect=CGRectZero;
                 line=line+1;
@@ -441,6 +450,67 @@
     return subPrice;
 }
 
+-(NSString*)renturnSelSubFood{
+    NSString*SelSubFood=@"";
+    for (SubfoodBtn*btnView in self.backgroundView.subviews) {
+        if ([btnView isKindOfClass:[SubfoodBtn class]]) {
+            if (btnView.subfood.dwUnitPrice>0) {
+                if (btnView.value!=btnView.defValue) {
+                    NSString*str=[btnView.subfood.szValueName stringByReplacingOccurrencesOfString:@" " withString:@""];
+                    str=[str stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+                    NSArray*tempArray=[str componentsSeparatedByString:@";"];
+                    for (NSString*str in tempArray) {
+                        if ([[str substringToIndex:1] integerValue]==btnView.value) {
+                            SelSubFood=[SelSubFood stringByAppendingFormat:@"%@",[str substringFromIndex:2]];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return SelSubFood;
+}
+#pragma mark delegate
+-(void)SubfoodBtnClick:(SubfoodBtn *)button{
+    NSInteger offset=0;
+    for (SubfoodBtn*btnView in self.backgroundView.subviews) {
+        if ([btnView isKindOfClass:[SubfoodBtn class]]) {
+            if (btnView.subfood.dwUnitPrice>0) {
+                if (btnView.value!=btnView.defValue) {
+                    offset=offset+(btnView.value-btnView.defValue)*btnView.subfood.dwUnitPrice;
+                }
+            }
+        }
+    }
+    self.priceOffset=offset;
+    self.price=self.showFood.dwSoldPrice+offset;
+    if (self.price<self.showFood.dwMinPrice) {
+        self.price=self.showFood.dwMinPrice;
+        self.priceL.text=[NSString stringWithFormat:@"$%.2f",self.showFood.dwMinPrice/100.0];
+    }else{
+        self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwSoldPrice+offset)/100.0];
+    }
+}
+
+-(void)FlavorButtonClick:(FlavorButton *)button{
+    NSInteger offset=0;
+    for (FlavorButton*btnView in self.backgroundView.subviews) {
+        if ([btnView isKindOfClass:[FlavorButton class]]) {
+            if (btnView.shopflavor.dwUnitPrice>0) {
+                if (btnView.value>btnView.shopflavor.dwDefValue) {
+                    offset=offset+btnView.shopflavor.dwUnitPrice;
+                }else{
+                    offset=offset-btnView.shopflavor.dwUnitPrice;
+                }
+            }
+        }
+    }
+    if (offset>0) {
+        self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwSoldPrice+offset+self.cookwayPrice)/100.0];
+    }else{
+         self.priceL.text=[NSString stringWithFormat:@"$%.2f",(self.showFood.dwSoldPrice+self.cookwayPrice)/100.0];
+    }
+}
 -(NSArray *)shopFlavorArray{
     if (!_shopFlavorArray) {
         _shopFlavorArray=[NSArray array];

@@ -22,4 +22,9 @@
 + (long long)getCurrentDate;
 + (long long)getTimestanps:(NSString*)time;
 + (NSString *) md5:(NSString *) input;
+
+/**
+根据颜色返回图片
+ */
++ (UIImage *)imageWithColor:(UIColor *)color;
 @end

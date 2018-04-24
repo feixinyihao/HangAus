@@ -50,7 +50,7 @@
     userNameField.leftView=headView;
     userNameField.leftViewMode = UITextFieldViewModeAlways;
     userNameField.placeholder=@"请输入用户名";
-    userNameField.text=@"cxr";
+    userNameField.text=@"330110005";
     self.userNameField=userNameField;
     [self.scrollView addSubview:userNameField];
     

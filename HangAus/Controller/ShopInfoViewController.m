@@ -18,6 +18,7 @@
 #import "CellWithView.h"
 #import "WithTextCell.h"
 #import "ChangeTradingHourViewController.h"
+#import "CookWayPriceViewController.h"
 @interface ShopInfoViewController ()<UITableViewDelegate,UITableViewDataSource,XXPickerViewDelegate>
 @property(nonatomic,weak)UITableView*tableView;
 
@@ -193,8 +194,8 @@
     NSDictionary*parm=[self.shopinfo mj_keyValues];
     [UniHttpTool getwithparameters:parm option:SetShop success:^(id json) {
         if ([json[@"ret"] integerValue]==0) {
-            SetupFoodKindViewController*foodkind=[[SetupFoodKindViewController alloc]init];
-            [self.navigationController pushViewController:foodkind animated:YES];
+            CookWayPriceViewController*cookway=[[CookWayPriceViewController alloc]init];
+            [self.navigationController pushViewController:cookway animated:YES];
         }else{
             //DLog(@"%@",json);
             KShowServerMessage(json[@"error"]);

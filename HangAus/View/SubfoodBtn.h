@@ -7,8 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+@class ShopSubFood,SubfoodBtn;
+@protocol SubfoodBtnDelegate <NSObject>
+
+@optional
+-(void)SubfoodBtnClick:(SubfoodBtn*)button;
+
+@end
 
 @interface SubfoodBtn : UIButton
 @property(nonatomic,assign)NSInteger subfoodPrice;
 @property(nonatomic,assign)BOOL isDefInc;
+@property(nonatomic,strong)ShopSubFood*subfood;
+@property(nonatomic,assign)NSInteger value;
+@property(nonatomic,assign)NSInteger defValue;
+
+@property(nonatomic,strong)id <SubfoodBtnDelegate>delegate;
 @end

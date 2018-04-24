@@ -76,6 +76,8 @@
     orderfoodPackage.dwFlavorPrice=0;
     orderfoodPackage.dwFoodDiscount=self.showfood.dwDiscount;
     orderfoodPackage.dwSubFoodDiscount=0;
+    orderfoodPackage.szShowFoodName=self.showfood.szDispName;
+    orderfoodPackage.dwGroupID=self.showfood.dwGroupID;
     NSMutableArray*temp=[NSMutableArray array];
     [temp addObject:orderfoodPackage];
     for (int i=0; i<self.showfoods.count; i++) {

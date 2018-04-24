@@ -7,15 +7,7 @@
 //
 
 #import "HomeViewController.h"
-#import "CreatePackageViewController.h"
-#import "FoodKindPropViewController.h"
-#import "SubfoodPriceViewController.h"
-#import "FoodPriceViewController.h"
-#import "CookWayPriceViewController.h"
-#import "OrderViewController.h"
-#import<objc/runtime.h>
-#import "ShowFood.h"
-#import <BGFMDB.h>
+
 @interface HomeViewController ()
 
 @end
@@ -25,13 +17,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
-    
-   
-    
+  
     
 }
 -(void)setupUI{
-    NSArray*btnArray=@[@"分类管理",@"创建套餐",@"配料价格",@"主食价格",@"烹饪价格",@"点餐"];
+ 
+    NSArray*btnArray=@[@"分类管理",@"创建套餐",@"配料价格",@"主食价格",@"烹饪价格",@"点餐",@"个人口味"];
     for (int i=0; i<btnArray.count; i++) {
         CGFloat spacing=20;
         UIButton*optionBtn=[[UIButton alloc]initWithFrame:CGRectMake(spacing+i%3*((kScreenW-spacing*4)/3+spacing), 40+i/3*80, (kScreenW-spacing*4)/3, 60)];
@@ -54,10 +45,13 @@
                          @"SubfoodPriceViewController",
                          @"FoodPriceViewController",
                          @"CookWayPriceViewController",
-                         @"OrderViewController"];
+                         @"OrderViewController",
+                         @"FlavorPriceViewController"];
     if ((button.tag-1000)<classArray.count) {
         id obj=[[NSClassFromString(classArray[button.tag-1000]) alloc]init];
         [self.navigationController pushViewController:obj animated:YES];
     }
 }
+
+
 @end

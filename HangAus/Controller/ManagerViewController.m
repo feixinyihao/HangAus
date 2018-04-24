@@ -158,7 +158,7 @@
                                
                             }
                             if (i==0) {
-                                 [showFood bg_saveOrUpdate];
+                                [showFood bg_saveOrUpdate];
                             }
                             [foodtemp addObject:showFood];
                         }
@@ -279,7 +279,6 @@
             FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
             NSArray*tempArr=foodkind.foodArr;
             ShowFood*showfood=tempArr[indexPath.row];
-            showfood.imagePath=@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1518005336571&di=fdbc1c5b14d803c6d14a3341bb067eae&imgtype=0&src=http%3A%2F%2Fimg.line0.com%2Fstatic%2Fimage%2F1703%2FSHNS0401428473271790.jpg";
             cell.food=showfood;
         }
         return cell;
@@ -327,6 +326,9 @@
     // 如果现在滑动的是左边的tableView，不做任何处理
     if ((UITableView *)scrollView == self.leftTableView) return;
     // 滚动右边tableView，设置选中左边的tableView某一行。indexPathsForVisibleRows属性返回屏幕上可见的cell的indexPath数组，利用这个属性就可以找到目前所在的分区
+    if (self.foodKindArr.count<1) {
+        return;
+    }
     [self.leftTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.rightTableView.indexPathsForVisibleRows.firstObject.section inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     // NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
 }
@@ -485,14 +487,15 @@
         }
 
         NSMutableDictionary*parm=showfood.mj_keyValues;
-        
-        [parm removeObjectForKey:@"imagePath"];
        // [parm setValue:[CommonFunc returnStringWithArray:showfood.ChosenFoods] forKey:@"ChosenFoods"];
         [UniHttpTool postwithparameters:parm option:SetShowFood success:^(id json) {
-            if ([json[@"ret"] integerValue]==0) {
-                NSArray<NSIndexPath*>*indexPathArray=@[indexpath];
-                [self.rightTableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
-            }
+         
+            NSArray<NSIndexPath*>*indexPathArray=@[indexpath];
+            [self.rightTableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
+            ShowFood*resultShowfood=[ShowFood mj_objectWithKeyValues:json[@"data"]];
+            [resultShowfood bg_saveOrUpdate];
+                
+            
         }];
     }
     

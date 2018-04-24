@@ -28,5 +28,7 @@
 @property(nonatomic,copy)NSString *szMemo;
 @property(nonatomic,copy)NSString *szSelSubFood;
 
-
+//自定义
+@property(nonatomic,copy)NSString*szShowFoodName;
+@property(nonatomic,assign)NSInteger dwGroupID;
 @end

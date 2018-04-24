@@ -109,6 +109,8 @@
 		69A6D22B2084900A007B4E31 /* UIView+cxr.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22A2084900A007B4E31 /* UIView+cxr.m */; };
 		69A6D22E2085BD8C007B4E31 /* PackageBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22D2085BD8C007B4E31 /* PackageBtn.m */; };
 		69A6D2312085CF87007B4E31 /* SubfoodBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D2302085CF87007B4E31 /* SubfoodBtn.m */; };
+		69D77EA1208DA8C700EA8FC6 /* FlavorPriceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA0208DA8C700EA8FC6 /* FlavorPriceViewController.m */; };
+		69D77EA4208EB5CE00EA8FC6 /* OrderListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -339,6 +341,10 @@
 		69A6D22D2085BD8C007B4E31 /* PackageBtn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageBtn.m; sourceTree = "<group>"; };
 		69A6D22F2085CF87007B4E31 /* SubfoodBtn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SubfoodBtn.h; sourceTree = "<group>"; };
 		69A6D2302085CF87007B4E31 /* SubfoodBtn.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SubfoodBtn.m; sourceTree = "<group>"; };
+		69D77E9F208DA8C700EA8FC6 /* FlavorPriceViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlavorPriceViewController.h; sourceTree = "<group>"; };
+		69D77EA0208DA8C700EA8FC6 /* FlavorPriceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlavorPriceViewController.m; sourceTree = "<group>"; };
+		69D77EA2208EB5CE00EA8FC6 /* OrderListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderListViewController.h; sourceTree = "<group>"; };
+		69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderListViewController.m; sourceTree = "<group>"; };
 		A7EBEE5FD63C2447B67250F9 /* libPods-HangAus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HangAus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -389,10 +395,14 @@
 				69075BD4207B53BF00C4A5A8 /* FoodPriceViewController.m */,
 				69075BC6207B404200C4A5A8 /* SubfoodPriceViewController.h */,
 				69075BC5207B404200C4A5A8 /* SubfoodPriceViewController.m */,
+				69D77E9F208DA8C700EA8FC6 /* FlavorPriceViewController.h */,
+				69D77EA0208DA8C700EA8FC6 /* FlavorPriceViewController.m */,
 				69075BD6207B58AA00C4A5A8 /* CookWayPriceViewController.h */,
 				69075BD7207B58AA00C4A5A8 /* CookWayPriceViewController.m */,
 				69075BDA207B59B400C4A5A8 /* OrderViewController.h */,
 				69075BD9207B59B400C4A5A8 /* OrderViewController.m */,
+				69D77EA2208EB5CE00EA8FC6 /* OrderListViewController.h */,
+				69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */,
 				69075BFA207E08D200C4A5A8 /* PackageOrderViewController.h */,
 				69075BFB207E08D200C4A5A8 /* PackageOrderViewController.m */,
 				69075BF7207DE8BB00C4A5A8 /* PayViewController.h */,
@@ -972,6 +982,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				69D77EA1208DA8C700EA8FC6 /* FlavorPriceViewController.m in Sources */,
 				69075B70207B30C800C4A5A8 /* ShopSubFood.m in Sources */,
 				69075B75207B30C800C4A5A8 /* CookWay.m in Sources */,
 				6976E350207B188F003163C3 /* MJRefreshNormalHeader.m in Sources */,
@@ -1014,6 +1025,7 @@
 				6976E34E207B188F003163C3 /* MJRefreshAutoGifFooter.m in Sources */,
 				69075BE4207B5A4800C4A5A8 /* ChosenFoodPropView.m in Sources */,
 				69075BB9207B3B3800C4A5A8 /* SetCookWayViewController.m in Sources */,
+				69D77EA4208EB5CE00EA8FC6 /* OrderListViewController.m in Sources */,
 				69075BEA207B5A8800C4A5A8 /* ShopCookway.m in Sources */,
 				69075BC7207B404200C4A5A8 /* SubfoodPriceViewController.m in Sources */,
 				6976E369207B22B8003163C3 /* BaseNavigationController.m in Sources */,

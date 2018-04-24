@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString* baseURL=@"http://10.121.0.250:8088/api/v1/";
+static NSString* baseURL=@"http://10.121.0.252:80/api/v1/";
 
 
 

@@ -26,11 +26,11 @@
     self.window=[[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor=[UIColor whiteColor];
     if (token) {
-//        LoginViewController*login=[[LoginViewController alloc]init];
-//        BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];
-//        self.window.rootViewController=base;
-        MainViewController*main=[[MainViewController alloc]init];
-        self.window.rootViewController=main;
+        LoginViewController*login=[[LoginViewController alloc]init];
+        BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];
+        self.window.rootViewController=base;
+//        MainViewController*main=[[MainViewController alloc]init];
+//        self.window.rootViewController=main;
     }else{
         LoginViewController*login=[[LoginViewController alloc]init];
         BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];

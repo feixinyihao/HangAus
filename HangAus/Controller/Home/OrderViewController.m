@@ -30,6 +30,7 @@
 #import "ChosenFood.h"
 #import "ShopSubFood.h"
 #import <BGFMDB.h>
+#import "OrderListViewController.h"
 @interface OrderViewController ()<UITableViewDelegate,UITableViewDataSource,FoodTableViewCellDelegate,JhtAnimationToolsDelegate,ChosenFoodPropViewDelegate>
 // 用来保存当前左边tableView选中的行数
 @property (strong, nonatomic) NSIndexPath *currentSelectIndexPath;
@@ -146,14 +147,61 @@
             cellView.backgroundColor=[UIColor whiteColor];
             UILabel*nameLabel=[[UILabel alloc]initWithFrame:CGRectMake(20, 0, kScreenW-120, 50)];
             nameLabel.font=[UIFont systemFontOfSize:15];
-            nameLabel.text=[NSString stringWithFormat:@"%ld  $%.2f", orderfood.dwShowFoodID,orderfood.dwFoodPrice/100.0];
+            nameLabel.text=[NSString stringWithFormat:@"%@  $%.2f", orderfood.szShowFoodName,[self returnPriceFromOrderFoods:@[orderfood]]/100.0];
             [cellView addSubview:nameLabel];
             [self.orderBackgroudView addSubview:cellView];
             
             PPNumberButton*ppBtn=[[PPNumberButton alloc]initWithFrame:CGRectMake(kScreenW-100, 10, 80, 20)];
             ppBtn.increaseImage = [UIImage imageNamed:@"increase"];
             ppBtn.decreaseImage = [UIImage imageNamed:@"decrease"];
+            ppBtn.decreaseHide = YES;
+            ppBtn.shakeAnimation = YES;
+            ppBtn.minValue=1;
+            ppBtn.maxValue=100;
             ppBtn.currentNumber=orderfood.dwQuantity;
+            ppBtn.resultBlock = ^(PPNumberButton *ppBtn, CGFloat number, BOOL increaseStatus) {
+            
+                NSInteger section=0;
+                NSInteger row=0;
+                for (int i=0; i<self.foodKindArr.count; i++) {
+                    
+                    FoodKindTest*foodkind=self.foodKindArr[i];
+                    if (orderfood.dwGroupID==foodkind.showGroup.dwGroupID) {
+                        section=i;
+                        for (int j=0; j<foodkind.foodArr.count; j++) {
+                            ShowFood*showfood=foodkind.foodArr[j];
+                            if (orderfood.dwShowFoodID==showfood.dwShowFoodID) {
+                                row=j;
+                                if (increaseStatus) {
+                                    showfood.orderNum=showfood.orderNum+1;
+                                    orderfood.dwQuantity=orderfood.dwQuantity+1;
+                                    self.orderNum=self.orderNum+1;
+                                }else{
+                                    showfood.orderNum=showfood.orderNum-1;
+                                    if (orderfood.dwQuantity>1) {
+                                        orderfood.dwQuantity=orderfood.dwQuantity-1;
+                                    }else{
+                                        [self.orderFoods removeObject:orderfood];
+                                    }
+                                   
+                                    self.orderNum=self.orderNum-1;
+                                }
+                                self.cartView.num=self.orderNum;
+                                [self.cartView reload];
+                                if (self.orderFoods.count>0) {
+                                    self.payBtn.hidden=NO;
+                                }
+                                [self.totalPrice setText:[NSString stringWithFormat:@"$%.2f",[self returnPriceFromOrderFoods:self.orderFoods]/100.0]];
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    
+                }
+                NSIndexPath*indexPath=[NSIndexPath indexPathForRow:row inSection:section];
+                [self.rightTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            };
             [cellView addSubview:ppBtn];
         }
         self.shadowView.alpha=0;
@@ -409,6 +457,9 @@
     // 如果现在滑动的是左边的tableView，不做任何处理
     if ((UITableView *)scrollView == self.leftTableView) return;
     // 滚动右边tableView，设置选中左边的tableView某一行。indexPathsForVisibleRows属性返回屏幕上可见的cell的indexPath数组，利用这个属性就可以找到目前所在的分区
+    if (self.foodKindArr.count<1) {
+        return;
+    }
     [self.leftTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:self.rightTableView.indexPathsForVisibleRows.firstObject.section inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
     // NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
 }
@@ -436,7 +487,7 @@
 
 
 //点击加号
--(void)ppNumDidClickWithCell:(FoodTableViewCell *)cell withIncreaseStatus:(BOOL)status{
+-(void)ppNumDidClickWithCell:(FoodTableViewCell *)cell withIncreaseNum:(CGFloat)num Status:(BOOL)status{
     
      NSIndexPath*indexPath=[self.rightTableView indexPathForCell:cell];
      FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
@@ -455,8 +506,18 @@
             aniImage.frame=CGRectMake(rect.origin.x, rect.origin.y, 10, 10);
             
             [tools aniStartShopCarAnimationWithStartRect:rect withImageView:aniImage withView:self.view withEndPoint:CGPointMake(30, kScreenH-40-65) withControlPoint:CGPointMake(rect.origin.x-80, rect.origin.y-80) withStartToEndSpacePercentage:0 withExpandAnimationTime:0 withNarrowAnimationTime:0.4 withAnimationValue:1];
+            if (num>1) {
+                for (int i=0; i<self.orderFoods.count; i++) {
+                    OrderFood*orderfood=self.orderFoods[i];
+                    if (showfood.dwShowFoodID==orderfood.dwShowFoodID) {
+                        orderfood.dwQuantity=orderfood.dwQuantity+1;
+                        break;
+                    }
+                }
+            }else{
+                [self addCartWithCell:cell];
+            }
             
-            [self addCartWithCell:cell];
         }else{
            
             NSArray<NSIndexPath*>*indexArray=@[indexPath];
@@ -472,8 +533,11 @@
         for (int i=0; i<self.orderFoods.count; i++) {
             OrderFood*orderfood=self.orderFoods[i];
             if (orderfood.dwShowFoodID==showfood.dwShowFoodID) {
-                [self.orderFoods removeObject:orderfood];
-                DLog(@"%@",self.orderFoods);
+                if (orderfood.dwQuantity>1) {
+                    orderfood.dwQuantity=orderfood.dwQuantity-1;
+                }else{
+                    [self.orderFoods removeObject:orderfood];
+                }
             }
         }
       
@@ -494,12 +558,12 @@
     NSInteger total=0;
     for (OrderFood*orderfood in orderfoods) {
         if (orderfood.dwParentIndex==0) {
-            total=total+orderfood.dwFoodPrice+
+            total=(total+orderfood.dwFoodPrice+
             orderfood.dwCookPrice+
             orderfood.dwFlavorPrice+
             orderfood.dwSubFoodPrice-
             orderfood.dwFoodDiscount-
-            orderfood.dwSubFoodDiscount;
+            orderfood.dwSubFoodDiscount)*orderfood.dwQuantity;
         }
         
     }
@@ -548,6 +612,8 @@
     orderfood.dwFoodDiscount=0;
     orderfood.dwSubFoodDiscount=0;
     [self.orderFoods addObject:orderfood];
+    orderfood.szShowFoodName=showfood.szDispName;
+    orderfood.dwGroupID=showfood.dwGroupID;
     DLog(@"%@",orderfood.mj_keyValues);
 }
 
@@ -564,7 +630,7 @@
 }
 //加入购物车
 -(void)ChosenFoodPropViewOrderWithOrderFood:(OrderFood *)orderfood withIndexPath:(NSIndexPath *)indexPath{
-    orderfood.dwFoodIndex=self.orderFoods.count+1;
+    
     NSDictionary*dict=orderfood.mj_keyValues;
     DLog(@"%@",dict);
     JhtAnimationTools*tools=[[JhtAnimationTools alloc]init];
@@ -573,6 +639,7 @@
     UIImageView*aniImage=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"round"]];
     aniImage.frame=CGRectMake(rect.origin.x, rect.origin.y, 10, 10);
     [tools aniStartShopCarAnimationWithStartRect:rect withImageView:aniImage withView:self.navigationController.view withEndPoint:CGPointMake(30, kScreenH-40) withControlPoint:CGPointMake(rect.origin.x-60, rect.origin.y-60) withStartToEndSpacePercentage:0 withExpandAnimationTime:0 withNarrowAnimationTime:0.4 withAnimationValue:1];
+    orderfood.dwFoodIndex=self.orderFoods.count+1;
     [self.orderFoods addObject:orderfood];
     //刷新
     FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
@@ -606,26 +673,29 @@
 }
 -(void)pay{
 
-    [UniHttpTool getwithparameters:nil option:GetOrderno success:^(id json) {
-        NSDictionary*dict=json[@"data"];
-        OrderInfo*orderInfo=[[OrderInfo alloc]init];
-        orderInfo.szOrderNo=dict[@"szOrderNo"];
-        orderInfo.dwOrderType=10;
-        orderInfo.dwPayType=1;
-        orderInfo.dwOrderStat=0x12;
-        orderInfo.dwOrderDate=[[self getCurrentDate:YES onlytime:NO] integerValue];
-        orderInfo.dwOrderTime=[[self getCurrentDate:NO onlytime:YES] integerValue];
-        orderInfo.dwTakeDate=[[self getCurrentDate:YES onlytime:NO] integerValue];
-        orderInfo.dwWantTakeTime=[[self getCurrentDate:NO onlytime:YES] integerValue]+100;
-        orderInfo.dwTotalPrice=[self returnPriceFromOrderFoods:self.orderFoods];
-        orderInfo.szMobilePhone=@"13372827999";
-        NSDictionary*parm=[orderInfo mj_keyValues];
-        [parm setValue:[CommonFunc returnStringWithArray:self.orderFoods] forKey:@"OrderFoods"];
-        [UniHttpTool postwithparameters:parm option:SetOrder success:^(id json) {
-            
-        }];
-        
-    }];
+    OrderListViewController*list=[[OrderListViewController alloc]init];
+    list.orderFoods=self.orderFoods;
+    [self.navigationController pushViewController:list animated:YES];
+//    [UniHttpTool getwithparameters:nil option:GetOrderno success:^(id json) {
+//        NSDictionary*dict=json[@"data"];
+//        OrderInfo*orderInfo=[[OrderInfo alloc]init];
+//        orderInfo.szOrderNo=dict[@"szOrderNo"];
+//        orderInfo.dwOrderType=10;
+//        orderInfo.dwPayType=1;
+//        orderInfo.dwOrderStat=0x12;
+//        orderInfo.dwOrderDate=[[self getCurrentDate:YES onlytime:NO] integerValue];
+//        orderInfo.dwOrderTime=[[self getCurrentDate:NO onlytime:YES] integerValue];
+//        orderInfo.dwTakeDate=[[self getCurrentDate:YES onlytime:NO] integerValue];
+//        orderInfo.dwWantTakeTime=[[self getCurrentDate:NO onlytime:YES] integerValue]+100;
+//        orderInfo.dwTotalPrice=[self returnPriceFromOrderFoods:self.orderFoods];
+//        orderInfo.szMobilePhone=@"13372827999";
+//        NSDictionary*parm=[orderInfo mj_keyValues];
+//        [parm setValue:[CommonFunc returnStringWithArray:self.orderFoods] forKey:@"OrderFoods"];
+//        [UniHttpTool postwithparameters:parm option:SetOrder success:^(id json) {
+//
+//        }];
+//
+//    }];
 }
 -(NSString*)getCurrentDate:(BOOL)onlyDate onlytime:(BOOL)onlyTime{
     

@@ -13,6 +13,8 @@
 @optional
 -(void)FoodTableViewCelleditBtnClick:(UIButton*)button withCell:(FoodTableViewCell*)cell;
 -(void)ppNumDidClickWithCell:(FoodTableViewCell*)cell withIncreaseStatus:(BOOL)status;
+
+-(void)ppNumDidClickWithCell:(FoodTableViewCell*)cell withIncreaseNum:(CGFloat)num Status:(BOOL)status;
 -(void)FoodTableViewCellOrderPackages:(FoodTableViewCell*)cell withShowfood:(ShowFood*)showfood;
 @end
 

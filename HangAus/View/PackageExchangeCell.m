@@ -37,7 +37,7 @@
     [self setupView];
 }
 -(void)setupView{
-    [self.foodImageView setImage:[UIImage imageNamed:@"coca"]];
+    [self.foodImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@.jpg",KrootImagePath,[CommonFunc md5:[NSString stringWithFormat:@"%ld",self.showfood.dwShowFoodID]]]] placeholderImage:[UIImage imageNamed:@"coca"] options:SDWebImageRefreshCached];
     [self.contentView addSubview:self.foodImageView];
     
     self.foodNameL.text=self.showfood.szDispName;

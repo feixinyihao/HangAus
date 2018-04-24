@@ -10,6 +10,7 @@
 #import "ShopSubFood.h"
 #import "SoldFood.h"
 #import "ShopCookway.h"
+#import "ShopFlavor.h"
 @interface SubFoodCell()<UITextFieldDelegate>
 @property(nonatomic,strong)UITextField*priceField;
 @property(nonatomic,strong)UIButton* didBtn;
@@ -37,23 +38,30 @@
     _soldfood=soldfood;
     [self setupView];
 }
+-(void)setCookway:(ShopCookway *)cookway{
+    _cookway=cookway;
+    [self setupView];
+}
+-(void)setShopFlavor:(ShopFlavor *)shopFlavor{
+    _shopFlavor=shopFlavor;
+    [self setupView];
+}
 -(void)setupView{
-    if (self.subfood) {
-        self.textLabel.text=self.subfood.szName;
-    }else if (self.soldfood){
-        self.textLabel.text=self.soldfood.szFoodName;
-    }else if (self.cookway){
-        self.textLabel.text=self.cookway.szName;
-    }
-    
+   
     self.priceField.frame=CGRectMake(kScreenW-120, 5, 60, 50);
     if (self.subfood) {
         self.priceField.text=[NSString stringWithFormat:@"%.2f",self.subfood.dwUnitPrice/100.0];
+        self.textLabel.text=self.subfood.szName;
     }else if(self.soldfood){
         self.priceField.text=[NSString stringWithFormat:@"%.2f",self.soldfood.dwUnitPrice/100.0];
+        self.textLabel.text=self.soldfood.szFoodName;
     }else if (self.cookway){
         self.priceField.text=[NSString stringWithFormat:@"%.2f",self.cookway.dwUnitPrice/100.0];
-        }
+        self.textLabel.text=self.cookway.szName;
+    }else if (self.shopFlavor){
+        self.priceField.text=[NSString stringWithFormat:@"%.2f",self.shopFlavor.dwUnitPrice/100.0];
+        self.textLabel.text=self.shopFlavor.szName;
+    }
     
     self.priceField.layer.borderWidth=1;
     self.priceField.layer.borderColor=[UIColor lightGrayColor].CGColor;
@@ -114,6 +122,12 @@
         }
     }else if (self.cookway){
         if (self.cookway.dwUnitPrice!=[textField.text floatValue]*100) {
+            self.didBtn.selected=YES;
+        }else{
+            self.didBtn.selected=NO;
+        }
+    }else if (self.shopFlavor){
+        if (self.shopFlavor.dwUnitPrice!=[textField.text floatValue]*100) {
             self.didBtn.selected=YES;
         }else{
             self.didBtn.selected=NO;

@@ -122,12 +122,14 @@
             self.ppBtn.currentNumber=self.food.orderNum;
             self.ppBtn.increaseImage = [UIImage imageNamed:@"increase"];
             self.ppBtn.decreaseImage = [UIImage imageNamed:@"decrease"];
+            self.ppBtn.longPressSpaceTime=CGFLOAT_MAX;
             __weak typeof(self) weakSelf = self;
             self.ppBtn.resultBlock = ^(PPNumberButton *ppBtn, CGFloat number, BOOL increaseStatus) {
                 
-                if ([weakSelf.delegate respondsToSelector:@selector(ppNumDidClickWithCell:withIncreaseStatus:)]) {
-                    [weakSelf.delegate ppNumDidClickWithCell:weakSelf withIncreaseStatus:increaseStatus];
+                if ([weakSelf.delegate respondsToSelector:@selector(ppNumDidClickWithCell:withIncreaseNum:Status:)]) {
+                    [weakSelf.delegate ppNumDidClickWithCell:weakSelf withIncreaseNum:number Status:increaseStatus];
                 }
+                
             };
             [self.packgesBtn removeFromSuperview];
             [self.contentView addSubview:self.ppBtn];

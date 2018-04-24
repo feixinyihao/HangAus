@@ -13,6 +13,7 @@
 #import <MJExtension.h>
 #import "MBProgressHUD+MJ.h"
 #import <BGFMDB.h>
+#import "SetupFoodKindViewController.h"
 @interface SubfoodPriceViewController ()<UITableViewDelegate,UITableViewDataSource,SubFoodCellDelegate>
 @property(nonatomic,weak)UITableView*tableView;
 @property(nonatomic,strong)NSArray*subfoodArray;
@@ -24,7 +25,12 @@
     [super viewDidLoad];
     [self setupTable];
     [self setupData];
-    self.title=@"修改价格";
+    self.title=@"配菜价格";
+    self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
+}
+-(void)save{
+    SetupFoodKindViewController*setupkkind=[[SetupFoodKindViewController alloc]init];
+    [self.navigationController pushViewController:setupkkind animated:YES];
 }
 -(void)setupFromDataBase{
     if ([ShopSubFood bg_findAll:nil].count>0) {
@@ -77,13 +83,11 @@
 -(void)SubFoodCellBtnClick:(UIButton *)button withCell:(SubFoodCell *)cell withStr:(NSString *)str{
     NSIndexPath*indexPath=[self.tableView indexPathForCell:cell];
     ShopSubFood*subfood=self.subfoodArray[indexPath.row];
-  //  NSDictionary*parm=[subfood mj_keyValues];
     NSDictionary*parm=@{@"dwSFID":@(subfood.dwSFID),
                         @"dwUnitPrice":@(roundf([str floatValue]*100)),
                         @"szMemo":@""
                         };
     [UniHttpTool getwithparameters:parm option:SetShopsubfoodprice success:^(id json) {
-        
     }];
     
 }

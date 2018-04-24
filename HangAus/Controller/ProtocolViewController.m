@@ -8,8 +8,12 @@
 
 #import "ProtocolViewController.h"
 #import "ShopInfoViewController.h"
+#import "UniHttpTool.h"
+#import "MBProgressHUD+MJ.h"
+#import "ShopInfo.h"
+#import <MJExtension.h>
 @interface ProtocolViewController ()
-
+@property(nonatomic,weak)UIButton*btn;
 @end
 
 @implementation ProtocolViewController
@@ -22,8 +26,28 @@
     self.navigationItem.backBarButtonItem = backbutton;
     self.view.backgroundColor=[UIColor whiteColor];
     [self setupUI];
+    [self setupData];
 }
-
+-(void)setupData{
+    [UniHttpTool getwithparameters:nil option:GetShop success:^(id json) {
+        NSArray*infoArray=json[@"data"];
+        ShopInfo*shopinfo=[ShopInfo mj_objectWithKeyValues:[infoArray firstObject]];
+        UILabel*msgL=[[UILabel alloc]initWithFrame:CGRectMake(0, 200, kScreenW, 30)];
+        msgL.textAlignment=NSTextAlignmentCenter;
+        msgL.textColor=[UIColor redColor];
+        [self.view addSubview:msgL];
+        
+        if ((shopinfo.dwShopStat&2)<=0) {
+            msgL.text=@"您未审核通过，请耐心等待";
+           // self.btn.hidden=YES;
+            self.title=@"";
+        }else if ((shopinfo.dwShopStat&1024)<=0||(shopinfo.dwShopStat&512)<=0||(shopinfo.dwShopStat&256)<=0){
+             msgL.text=@"您暂时还无法使用，请联系商家";
+          //  self.btn.hidden=YES;
+            self.title=@"";
+        }
+    }];
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -36,6 +60,7 @@
     [btn setBackgroundColor:KmainColor];
     btn.layer.cornerRadius=5;
     [self.view addSubview:btn];
+    self.btn=btn;
     /*底部
     UILabel*progressL=[[UILabel alloc]initWithFrame:CGRectMake(0, kScreenH-64-20, kScreenW, 20)];
     progressL.font=[UIFont systemFontOfSize:16];

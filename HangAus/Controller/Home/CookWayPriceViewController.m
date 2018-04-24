@@ -12,9 +12,12 @@
 #import <MJExtension.h>
 #import "MBProgressHUD+MJ.h"
 #import "ShopCookway.h"
+#import <BGFMDB.h>
+#import "FlavorPriceViewController.h"
 @interface CookWayPriceViewController()<UITableViewDelegate,UITableViewDataSource,SubFoodCellDelegate>
 @property(nonatomic,weak)UITableView*tableView;
 @property(nonatomic,strong)NSArray*cookwayArray;
+
 @end
 
 @implementation CookWayPriceViewController
@@ -23,7 +26,8 @@
     [super viewDidLoad];
     [self setupTable];
     [self setupData];
-    self.title=@"修改价格";
+    self.title=@"烹饪价格";
+    self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
 }
 
 -(void)setupData{
@@ -38,6 +42,10 @@
         [self.tableView reloadData];
         [MBProgressHUD hideHUD];
     }];
+}
+-(void)save{
+    FlavorPriceViewController*flacor=[[FlavorPriceViewController alloc]init];
+    [self.navigationController pushViewController:flacor animated:YES];
 }
 -(void)setupTable{
     UITableView*tableView=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, kScreenW, kScreenH-64) style:UITableViewStylePlain];
@@ -72,11 +80,12 @@
     NSDictionary*parm=[cookway mj_keyValues];
     [parm setValue:[NSString stringWithFormat:@"%.f",[str floatValue]*100] forKey:@"dwUnitPrice"];
     [UniHttpTool getwithparameters:parm option:SetShopCookWay success:^(id json) {
-        if ([json[@"ret"] integerValue]==0) {
-            NSDictionary*dict=json[@"data"];
-            cookway.dwUnitPrice=[dict[@"dwUnitPrice"] integerValue];
-            [MBProgressHUD showSuccess:@"修改成功"];
-        }
+       
+        ShopCookway*result=[ShopCookway mj_objectWithKeyValues:json[@"data"]];
+        cookway.dwUnitPrice=result.dwUnitPrice;
+        [result bg_saveOrUpdate];
+        [MBProgressHUD showSuccess:@"修改成功"];
+        
     }];
     
 }

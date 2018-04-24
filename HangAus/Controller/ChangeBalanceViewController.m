@@ -77,6 +77,9 @@
 }
 -(void)next{
     if (self.setupNum==self.selGroupArray.count) {
+        [UniHttpTool getwithparameters:nil option:ShopInitOk success:^(id json) {
+            
+        }];
         MainViewController*main=[[MainViewController alloc]init];
         self.view.window.rootViewController=main;
     }else{
