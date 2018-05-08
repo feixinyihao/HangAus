@@ -25,7 +25,6 @@
 		69075B74207B30C800C4A5A8 /* ChosenFood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B6A207B30C600C4A5A8 /* ChosenFood.m */; };
 		69075B75207B30C800C4A5A8 /* CookWay.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B6B207B30C700C4A5A8 /* CookWay.m */; };
 		69075B76207B30C800C4A5A8 /* ShowFood.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B6E207B30C800C4A5A8 /* ShowFood.m */; };
-		69075B79207B30F200C4A5A8 /* ChoseSubFoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B77207B30F100C4A5A8 /* ChoseSubFoodView.m */; };
 		69075B80207B312000C4A5A8 /* FoodKind.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B7A207B311E00C4A5A8 /* FoodKind.m */; };
 		69075B81207B312000C4A5A8 /* TradingHour.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B7D207B311E00C4A5A8 /* TradingHour.m */; };
 		69075B82207B312000C4A5A8 /* ShowGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075B7F207B312000C4A5A8 /* ShowGroup.m */; };
@@ -66,9 +65,12 @@
 		69075BF6207DA22700C4A5A8 /* FlavorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BF5207DA22700C4A5A8 /* FlavorButton.m */; };
 		69075BF9207DE8BB00C4A5A8 /* PayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BF8207DE8BB00C4A5A8 /* PayViewController.m */; };
 		69075BFC207E08D200C4A5A8 /* PackageOrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69075BFB207E08D200C4A5A8 /* PackageOrderViewController.m */; };
+		693309122093CA620005C48C /* ChosenSubfoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 693309112093CA620005C48C /* ChosenSubfoodView.m */; };
+		693309152093CA820005C48C /* ChosenFlavorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 693309142093CA820005C48C /* ChosenFlavorView.m */; };
+		6933091B209421240005C48C /* PropSelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933091A209421240005C48C /* PropSelectView.m */; };
+		6933091E209897390005C48C /* ChoseSubFoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6933091C209897380005C48C /* ChoseSubFoodView.m */; };
 		69719DE2207EFC7F0040B07A /* PackageExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE1207EFC7F0040B07A /* PackageExchange.m */; };
 		69719DE5207EFD7C0040B07A /* PackageExchangeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */; };
-		69719DE8208227150040B07A /* ClassDataBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 69719DE7208227150040B07A /* ClassDataBase.m */; };
 		6976E2CA207B1271003163C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E2C9207B1271003163C3 /* AppDelegate.m */; };
 		6976E2CD207B1271003163C3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E2CC207B1271003163C3 /* ViewController.m */; };
 		6976E2D0207B1271003163C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6976E2CE207B1271003163C3 /* Main.storyboard */; };
@@ -106,11 +108,24 @@
 		6976E363207B1EDF003163C3 /* StaffInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E362207B1EDE003163C3 /* StaffInfo.m */; };
 		6976E369207B22B8003163C3 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E367207B22B8003163C3 /* BaseNavigationController.m */; };
 		6976E36C207B22E6003163C3 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6976E36A207B22E5003163C3 /* LoginViewController.m */; };
+		698C89002099BD8800B48A25 /* OrderViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C88FF2099BD8800B48A25 /* OrderViewCell.m */; };
+		698C8903209BFC0900B48A25 /* OrderPackageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 698C8902209BFC0900B48A25 /* OrderPackageViewController.m */; };
+		698E7CC320A027D6004358D5 /* ChosenPackageFoodView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CC220A027D6004358D5 /* ChosenPackageFoodView.m */; };
+		698E7CD620A15301004358D5 /* NSDateFormatter+BAKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CC520A15301004358D5 /* NSDateFormatter+BAKit.m */; };
+		698E7CD720A15301004358D5 /* BAKit_DatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CC720A15301004358D5 /* BAKit_DatePicker.m */; };
+		698E7CD820A15301004358D5 /* UIView+BARectCorner_pick.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CC820A15301004358D5 /* UIView+BARectCorner_pick.m */; };
+		698E7CD920A15301004358D5 /* NSDate+BAKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CC920A15301004358D5 /* NSDate+BAKit.m */; };
+		698E7CDA20A15301004358D5 /* BAPickView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 698E7CCC20A15301004358D5 /* BAPickView.bundle */; };
+		698E7CDB20A15301004358D5 /* UIView+BAAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CD320A15301004358D5 /* UIView+BAAnimation.m */; };
+		698E7CDC20A15301004358D5 /* BAKit_PickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 698E7CD520A15301004358D5 /* BAKit_PickerView.m */; };
 		69A6D22B2084900A007B4E31 /* UIView+cxr.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22A2084900A007B4E31 /* UIView+cxr.m */; };
 		69A6D22E2085BD8C007B4E31 /* PackageBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D22D2085BD8C007B4E31 /* PackageBtn.m */; };
 		69A6D2312085CF87007B4E31 /* SubfoodBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6D2302085CF87007B4E31 /* SubfoodBtn.m */; };
 		69D77EA1208DA8C700EA8FC6 /* FlavorPriceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA0208DA8C700EA8FC6 /* FlavorPriceViewController.m */; };
 		69D77EA4208EB5CE00EA8FC6 /* OrderListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */; };
+		69D77EA7209053BD00EA8FC6 /* OrderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA6209053BD00EA8FC6 /* OrderView.m */; };
+		69D77EAA2092E8C700EA8FC6 /* OrdersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EA92092E8C700EA8FC6 /* OrdersViewController.m */; };
+		69D77EAD2092FFFE00EA8FC6 /* OrderBottonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 69D77EAC2092FFFE00EA8FC6 /* OrderBottonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,8 +182,6 @@
 		69075B6C207B30C700C4A5A8 /* ChosenFood.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChosenFood.h; sourceTree = "<group>"; };
 		69075B6D207B30C700C4A5A8 /* Food.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Food.h; sourceTree = "<group>"; };
 		69075B6E207B30C800C4A5A8 /* ShowFood.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowFood.m; sourceTree = "<group>"; };
-		69075B77207B30F100C4A5A8 /* ChoseSubFoodView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoseSubFoodView.m; sourceTree = "<group>"; };
-		69075B78207B30F100C4A5A8 /* ChoseSubFoodView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoseSubFoodView.h; sourceTree = "<group>"; };
 		69075B7A207B311E00C4A5A8 /* FoodKind.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoodKind.m; sourceTree = "<group>"; };
 		69075B7B207B311E00C4A5A8 /* FoodKind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoodKind.h; sourceTree = "<group>"; };
 		69075B7C207B311E00C4A5A8 /* TradingHour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TradingHour.h; path = "../../../../../../../justprint/IOS/项目/DIHOManager/DIHOManager/main/model/TradingHour.h"; sourceTree = "<group>"; };
@@ -249,12 +262,18 @@
 		69075BF8207DE8BB00C4A5A8 /* PayViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PayViewController.m; sourceTree = "<group>"; };
 		69075BFA207E08D200C4A5A8 /* PackageOrderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageOrderViewController.h; sourceTree = "<group>"; };
 		69075BFB207E08D200C4A5A8 /* PackageOrderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageOrderViewController.m; sourceTree = "<group>"; };
+		693309102093CA620005C48C /* ChosenSubfoodView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChosenSubfoodView.h; sourceTree = "<group>"; };
+		693309112093CA620005C48C /* ChosenSubfoodView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChosenSubfoodView.m; sourceTree = "<group>"; };
+		693309132093CA820005C48C /* ChosenFlavorView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChosenFlavorView.h; sourceTree = "<group>"; };
+		693309142093CA820005C48C /* ChosenFlavorView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChosenFlavorView.m; sourceTree = "<group>"; };
+		69330919209421240005C48C /* PropSelectView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PropSelectView.h; sourceTree = "<group>"; };
+		6933091A209421240005C48C /* PropSelectView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PropSelectView.m; sourceTree = "<group>"; };
+		6933091C209897380005C48C /* ChoseSubFoodView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChoseSubFoodView.m; sourceTree = "<group>"; };
+		6933091D209897380005C48C /* ChoseSubFoodView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChoseSubFoodView.h; sourceTree = "<group>"; };
 		69719DE0207EFC7F0040B07A /* PackageExchange.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageExchange.h; sourceTree = "<group>"; };
 		69719DE1207EFC7F0040B07A /* PackageExchange.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageExchange.m; sourceTree = "<group>"; };
 		69719DE3207EFD7C0040B07A /* PackageExchangeCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageExchangeCell.h; sourceTree = "<group>"; };
 		69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PackageExchangeCell.m; sourceTree = "<group>"; };
-		69719DE6208227150040B07A /* ClassDataBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassDataBase.h; sourceTree = "<group>"; };
-		69719DE7208227150040B07A /* ClassDataBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassDataBase.m; sourceTree = "<group>"; };
 		6976E2C5207B1271003163C3 /* HangAus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangAus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6976E2C8207B1271003163C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6976E2C9207B1271003163C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -335,6 +354,29 @@
 		6976E368207B22B8003163C3 /* BaseNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseNavigationController.h; sourceTree = "<group>"; };
 		6976E36A207B22E5003163C3 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		6976E36B207B22E6003163C3 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		698C88FE2099BD8800B48A25 /* OrderViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderViewCell.h; sourceTree = "<group>"; };
+		698C88FF2099BD8800B48A25 /* OrderViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderViewCell.m; sourceTree = "<group>"; };
+		698C8901209BFC0900B48A25 /* OrderPackageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderPackageViewController.h; sourceTree = "<group>"; };
+		698C8902209BFC0900B48A25 /* OrderPackageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderPackageViewController.m; sourceTree = "<group>"; };
+		698E7CC120A027D6004358D5 /* ChosenPackageFoodView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChosenPackageFoodView.h; sourceTree = "<group>"; };
+		698E7CC220A027D6004358D5 /* ChosenPackageFoodView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChosenPackageFoodView.m; sourceTree = "<group>"; };
+		698E7CC520A15301004358D5 /* NSDateFormatter+BAKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDateFormatter+BAKit.m"; sourceTree = "<group>"; };
+		698E7CC620A15301004358D5 /* BAKit_ConfigurationDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAKit_ConfigurationDefine.h; sourceTree = "<group>"; };
+		698E7CC720A15301004358D5 /* BAKit_DatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAKit_DatePicker.m; sourceTree = "<group>"; };
+		698E7CC820A15301004358D5 /* UIView+BARectCorner_pick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+BARectCorner_pick.m"; sourceTree = "<group>"; };
+		698E7CC920A15301004358D5 /* NSDate+BAKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+BAKit.m"; sourceTree = "<group>"; };
+		698E7CCA20A15301004358D5 /* BAKit_PickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAKit_PickerView.h; sourceTree = "<group>"; };
+		698E7CCB20A15301004358D5 /* UIView+BAAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+BAAnimation.h"; sourceTree = "<group>"; };
+		698E7CCC20A15301004358D5 /* BAPickView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = BAPickView.bundle; sourceTree = "<group>"; };
+		698E7CCD20A15301004358D5 /* NSDateFormatter+BAKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDateFormatter+BAKit.h"; sourceTree = "<group>"; };
+		698E7CCE20A15301004358D5 /* UIView+BARectCorner_pick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+BARectCorner_pick.h"; sourceTree = "<group>"; };
+		698E7CCF20A15301004358D5 /* BAKit_DatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAKit_DatePicker.h; sourceTree = "<group>"; };
+		698E7CD020A15301004358D5 /* BAKit_PickerViewConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAKit_PickerViewConfig.h; sourceTree = "<group>"; };
+		698E7CD120A15301004358D5 /* BAPickView_Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPickView_Version.h; sourceTree = "<group>"; };
+		698E7CD220A15301004358D5 /* NSDate+BAKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+BAKit.h"; sourceTree = "<group>"; };
+		698E7CD320A15301004358D5 /* UIView+BAAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+BAAnimation.m"; sourceTree = "<group>"; };
+		698E7CD420A15301004358D5 /* BAPickView_OC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BAPickView_OC.h; sourceTree = "<group>"; };
+		698E7CD520A15301004358D5 /* BAKit_PickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BAKit_PickerView.m; sourceTree = "<group>"; };
 		69A6D2292084900A007B4E31 /* UIView+cxr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+cxr.h"; sourceTree = "<group>"; };
 		69A6D22A2084900A007B4E31 /* UIView+cxr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+cxr.m"; sourceTree = "<group>"; };
 		69A6D22C2085BD8C007B4E31 /* PackageBtn.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PackageBtn.h; sourceTree = "<group>"; };
@@ -345,6 +387,12 @@
 		69D77EA0208DA8C700EA8FC6 /* FlavorPriceViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlavorPriceViewController.m; sourceTree = "<group>"; };
 		69D77EA2208EB5CE00EA8FC6 /* OrderListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderListViewController.h; sourceTree = "<group>"; };
 		69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderListViewController.m; sourceTree = "<group>"; };
+		69D77EA5209053BD00EA8FC6 /* OrderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderView.h; sourceTree = "<group>"; };
+		69D77EA6209053BD00EA8FC6 /* OrderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderView.m; sourceTree = "<group>"; };
+		69D77EA82092E8C700EA8FC6 /* OrdersViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrdersViewController.h; sourceTree = "<group>"; };
+		69D77EA92092E8C700EA8FC6 /* OrdersViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrdersViewController.m; sourceTree = "<group>"; };
+		69D77EAB2092FFFE00EA8FC6 /* OrderBottonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrderBottonView.h; sourceTree = "<group>"; };
+		69D77EAC2092FFFE00EA8FC6 /* OrderBottonView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrderBottonView.m; sourceTree = "<group>"; };
 		A7EBEE5FD63C2447B67250F9 /* libPods-HangAus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HangAus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -401,10 +449,14 @@
 				69075BD7207B58AA00C4A5A8 /* CookWayPriceViewController.m */,
 				69075BDA207B59B400C4A5A8 /* OrderViewController.h */,
 				69075BD9207B59B400C4A5A8 /* OrderViewController.m */,
+				69D77EA82092E8C700EA8FC6 /* OrdersViewController.h */,
+				69D77EA92092E8C700EA8FC6 /* OrdersViewController.m */,
 				69D77EA2208EB5CE00EA8FC6 /* OrderListViewController.h */,
 				69D77EA3208EB5CE00EA8FC6 /* OrderListViewController.m */,
 				69075BFA207E08D200C4A5A8 /* PackageOrderViewController.h */,
 				69075BFB207E08D200C4A5A8 /* PackageOrderViewController.m */,
+				698C8901209BFC0900B48A25 /* OrderPackageViewController.h */,
+				698C8902209BFC0900B48A25 /* OrderPackageViewController.m */,
 				69075BF7207DE8BB00C4A5A8 /* PayViewController.h */,
 				69075BF8207DE8BB00C4A5A8 /* PayViewController.m */,
 				69075BB0207B3AFD00C4A5A8 /* EditFoodKindPropViewController.h */,
@@ -428,6 +480,25 @@
 				69075BCE207B46BD00C4A5A8 /* SettingsViewController.m */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		6933090F2093C9E20005C48C /* ChonsenProp */ = {
+			isa = PBXGroup;
+			children = (
+				693309102093CA620005C48C /* ChosenSubfoodView.h */,
+				693309112093CA620005C48C /* ChosenSubfoodView.m */,
+				693309132093CA820005C48C /* ChosenFlavorView.h */,
+				693309142093CA820005C48C /* ChosenFlavorView.m */,
+				69075BF4207DA22700C4A5A8 /* FlavorButton.h */,
+				69075BF5207DA22700C4A5A8 /* FlavorButton.m */,
+				69A6D22F2085CF87007B4E31 /* SubfoodBtn.h */,
+				69A6D2302085CF87007B4E31 /* SubfoodBtn.m */,
+				69075BE3207B5A4800C4A5A8 /* ChosenFoodPropView.h */,
+				69075BE2207B5A4800C4A5A8 /* ChosenFoodPropView.m */,
+				69330919209421240005C48C /* PropSelectView.h */,
+				6933091A209421240005C48C /* PropSelectView.m */,
+			);
+			path = ChonsenProp;
 			sourceTree = "<group>";
 		};
 		6976E2BC207B1271003163C3 = {
@@ -585,8 +656,13 @@
 		6976E306207B16DB003163C3 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6933090F2093C9E20005C48C /* ChonsenProp */,
 				69075BE0207B5A0300C4A5A8 /* CartView.h */,
 				69075BDF207B5A0300C4A5A8 /* CartView.m */,
+				69D77EA5209053BD00EA8FC6 /* OrderView.h */,
+				69D77EA6209053BD00EA8FC6 /* OrderView.m */,
+				698C88FE2099BD8800B48A25 /* OrderViewCell.h */,
+				698C88FF2099BD8800B48A25 /* OrderViewCell.m */,
 				69075BBD207B3B7600C4A5A8 /* FoodTableViewCell.h */,
 				69075BBC207B3B7600C4A5A8 /* FoodTableViewCell.m */,
 				69075B96207B32A600C4A5A8 /* TradingHourCell.h */,
@@ -595,28 +671,26 @@
 				69075B87207B317100C4A5A8 /* CheckBoxBtn.m */,
 				69075B84207B314600C4A5A8 /* CustomButton.h */,
 				69075B83207B314500C4A5A8 /* CustomButton.m */,
-				69075B78207B30F100C4A5A8 /* ChoseSubFoodView.h */,
-				69075B77207B30F100C4A5A8 /* ChoseSubFoodView.m */,
 				69075B59207B304600C4A5A8 /* ChosenFoodView.h */,
 				69075B5A207B304600C4A5A8 /* ChosenFoodView.m */,
+				698E7CC120A027D6004358D5 /* ChosenPackageFoodView.h */,
+				698E7CC220A027D6004358D5 /* ChosenPackageFoodView.m */,
+				6933091D209897380005C48C /* ChoseSubFoodView.h */,
+				6933091C209897380005C48C /* ChoseSubFoodView.m */,
 				69075B50207B2FAB00C4A5A8 /* WithTextCell.h */,
 				69075B51207B2FAB00C4A5A8 /* WithTextCell.m */,
 				69075B8F207B320400C4A5A8 /* ChangeBalanceCell.h */,
 				69075B90207B320400C4A5A8 /* ChangeBalanceCell.m */,
 				69075BC8207B406B00C4A5A8 /* SubFoodCell.h */,
 				69075BC9207B406C00C4A5A8 /* SubFoodCell.m */,
-				69075BE3207B5A4800C4A5A8 /* ChosenFoodPropView.h */,
-				69075BE2207B5A4800C4A5A8 /* ChosenFoodPropView.m */,
-				69075BF4207DA22700C4A5A8 /* FlavorButton.h */,
-				69075BF5207DA22700C4A5A8 /* FlavorButton.m */,
-				69A6D22F2085CF87007B4E31 /* SubfoodBtn.h */,
-				69A6D2302085CF87007B4E31 /* SubfoodBtn.m */,
 				69719DE3207EFD7C0040B07A /* PackageExchangeCell.h */,
 				69719DE4207EFD7C0040B07A /* PackageExchangeCell.m */,
 				69A6D2292084900A007B4E31 /* UIView+cxr.h */,
 				69A6D22A2084900A007B4E31 /* UIView+cxr.m */,
 				69A6D22C2085BD8C007B4E31 /* PackageBtn.h */,
 				69A6D22D2085BD8C007B4E31 /* PackageBtn.m */,
+				69D77EAB2092FFFE00EA8FC6 /* OrderBottonView.h */,
+				69D77EAC2092FFFE00EA8FC6 /* OrderBottonView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -661,12 +735,11 @@
 		6976E311207B1859003163C3 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				698E7CC420A15301004358D5 /* BAPickView */,
 				6976E358207B18A1003163C3 /* MBProgressHUD */,
 				6976E315207B188F003163C3 /* MJRefresh */,
 				6976E313207B187C003163C3 /* UniHttpTool.h */,
 				6976E312207B187C003163C3 /* UniHttpTool.m */,
-				69719DE6208227150040B07A /* ClassDataBase.h */,
-				69719DE7208227150040B07A /* ClassDataBase.m */,
 				69075BDD207B59EE00C4A5A8 /* JhtAnimationTools.h */,
 				69075BDC207B59EE00C4A5A8 /* JhtAnimationTools.m */,
 			);
@@ -778,6 +851,30 @@
 				6976E35D207B18A1003163C3 /* MBProgressHUD.bundle */,
 			);
 			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		698E7CC420A15301004358D5 /* BAPickView */ = {
+			isa = PBXGroup;
+			children = (
+				698E7CC520A15301004358D5 /* NSDateFormatter+BAKit.m */,
+				698E7CC620A15301004358D5 /* BAKit_ConfigurationDefine.h */,
+				698E7CC720A15301004358D5 /* BAKit_DatePicker.m */,
+				698E7CC820A15301004358D5 /* UIView+BARectCorner_pick.m */,
+				698E7CC920A15301004358D5 /* NSDate+BAKit.m */,
+				698E7CCA20A15301004358D5 /* BAKit_PickerView.h */,
+				698E7CCB20A15301004358D5 /* UIView+BAAnimation.h */,
+				698E7CCC20A15301004358D5 /* BAPickView.bundle */,
+				698E7CCD20A15301004358D5 /* NSDateFormatter+BAKit.h */,
+				698E7CCE20A15301004358D5 /* UIView+BARectCorner_pick.h */,
+				698E7CCF20A15301004358D5 /* BAKit_DatePicker.h */,
+				698E7CD020A15301004358D5 /* BAKit_PickerViewConfig.h */,
+				698E7CD120A15301004358D5 /* BAPickView_Version.h */,
+				698E7CD220A15301004358D5 /* NSDate+BAKit.h */,
+				698E7CD320A15301004358D5 /* UIView+BAAnimation.m */,
+				698E7CD420A15301004358D5 /* BAPickView_OC.h */,
+				698E7CD520A15301004358D5 /* BAKit_PickerView.m */,
+			);
+			path = BAPickView;
 			sourceTree = "<group>";
 		};
 		90BEB3500BA8061595466C58 /* Pods */ = {
@@ -898,6 +995,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				698E7CDA20A15301004358D5 /* BAPickView.bundle in Resources */,
 				6976E2D5207B1271003163C3 /* LaunchScreen.storyboard in Resources */,
 				6976E2D2207B1271003163C3 /* Assets.xcassets in Resources */,
 				6976E360207B18A1003163C3 /* MBProgressHUD.bundle in Resources */,
@@ -988,19 +1086,27 @@
 				6976E350207B188F003163C3 /* MJRefreshNormalHeader.m in Sources */,
 				69075B55207B2FC100C4A5A8 /* ShopInfo.m in Sources */,
 				69A6D22B2084900A007B4E31 /* UIView+cxr.m in Sources */,
+				698E7CD920A15301004358D5 /* NSDate+BAKit.m in Sources */,
 				6976E351207B188F003163C3 /* MJRefreshStateHeader.m in Sources */,
 				69075BE1207B5A0300C4A5A8 /* CartView.m in Sources */,
 				69A6D22E2085BD8C007B4E31 /* PackageBtn.m in Sources */,
+				698E7CD720A15301004358D5 /* BAKit_DatePicker.m in Sources */,
 				6976E347207B188F003163C3 /* UIScrollView+MJExtension.m in Sources */,
+				698E7CDC20A15301004358D5 /* BAKit_PickerView.m in Sources */,
 				69075B82207B312000C4A5A8 /* ShowGroup.m in Sources */,
 				69075B97207B32A600C4A5A8 /* TradingHourCell.m in Sources */,
 				69075BDB207B59B500C4A5A8 /* OrderViewController.m in Sources */,
 				69075BB2207B3AFE00C4A5A8 /* EditFoodKindPropViewController.m in Sources */,
+				6933091E209897390005C48C /* ChoseSubFoodView.m in Sources */,
+				69D77EAD2092FFFE00EA8FC6 /* OrderBottonView.m in Sources */,
+				693309152093CA820005C48C /* ChosenFlavorView.m in Sources */,
 				6976E34C207B188F003163C3 /* MJRefreshBackNormalFooter.m in Sources */,
 				69075BF9207DE8BB00C4A5A8 /* PayViewController.m in Sources */,
 				6976E34D207B188F003163C3 /* MJRefreshAutoStateFooter.m in Sources */,
+				69D77EA7209053BD00EA8FC6 /* OrderView.m in Sources */,
 				6976E345207B188F003163C3 /* MJRefreshConst.m in Sources */,
 				6976E34B207B188F003163C3 /* MJRefreshBackStateFooter.m in Sources */,
+				698E7CD820A15301004358D5 /* UIView+BARectCorner_pick.m in Sources */,
 				69075BD5207B53BF00C4A5A8 /* FoodPriceViewController.m in Sources */,
 				6976E314207B187C003163C3 /* UniHttpTool.m in Sources */,
 				69719DE5207EFD7C0040B07A /* PackageExchangeCell.m in Sources */,
@@ -1012,13 +1118,14 @@
 				69075BDE207B59EF00C4A5A8 /* JhtAnimationTools.m in Sources */,
 				69075B40207B262F00C4A5A8 /* StaffToken.m in Sources */,
 				69719DE2207EFC7F0040B07A /* PackageExchange.m in Sources */,
-				69719DE8208227150040B07A /* ClassDataBase.m in Sources */,
 				69075B94207B328B00C4A5A8 /* WeekSelectViewController.m in Sources */,
 				6976E35E207B18A1003163C3 /* MBProgressHUD.m in Sources */,
 				69075BBB207B3B3800C4A5A8 /* SetFlavorViewController.m in Sources */,
 				69075B73207B30C800C4A5A8 /* Food.m in Sources */,
 				6976E34F207B188F003163C3 /* MJRefreshAutoNormalFooter.m in Sources */,
+				69D77EAA2092E8C700EA8FC6 /* OrdersViewController.m in Sources */,
 				69075BF3207D953400C4A5A8 /* OrderInfo.m in Sources */,
+				698E7CC320A027D6004358D5 /* ChosenPackageFoodView.m in Sources */,
 				69075BF6207DA22700C4A5A8 /* FlavorButton.m in Sources */,
 				6976E348207B188F003163C3 /* NSBundle+MJRefresh.m in Sources */,
 				69075B52207B2FAB00C4A5A8 /* WithTextCell.m in Sources */,
@@ -1027,6 +1134,7 @@
 				69075BB9207B3B3800C4A5A8 /* SetCookWayViewController.m in Sources */,
 				69D77EA4208EB5CE00EA8FC6 /* OrderListViewController.m in Sources */,
 				69075BEA207B5A8800C4A5A8 /* ShopCookway.m in Sources */,
+				698C8903209BFC0900B48A25 /* OrderPackageViewController.m in Sources */,
 				69075BC7207B404200C4A5A8 /* SubfoodPriceViewController.m in Sources */,
 				6976E369207B22B8003163C3 /* BaseNavigationController.m in Sources */,
 				69075B46207B2DAB00C4A5A8 /* ProtocolViewController.m in Sources */,
@@ -1045,7 +1153,7 @@
 				69075BAF207B3A9800C4A5A8 /* CreatePackageViewController.m in Sources */,
 				69075B49207B2DC700C4A5A8 /* ShopInfoViewController.m in Sources */,
 				69075B4C207B2E1C00C4A5A8 /* SetupFoodKindViewController.m in Sources */,
-				69075B79207B30F200C4A5A8 /* ChoseSubFoodView.m in Sources */,
+				693309122093CA620005C48C /* ChosenSubfoodView.m in Sources */,
 				69075B43207B2A6700C4A5A8 /* ChangePswViewController.m in Sources */,
 				69A6D2312085CF87007B4E31 /* SubfoodBtn.m in Sources */,
 				69075B6F207B30C800C4A5A8 /* SoldFood.m in Sources */,
@@ -1058,6 +1166,8 @@
 				6976E34A207B188F003163C3 /* MJRefreshBackGifFooter.m in Sources */,
 				6976E344207B188F003163C3 /* UIScrollView+MJRefresh.m in Sources */,
 				69075B8B207B31A700C4A5A8 /* ChangeBalanceViewController.m in Sources */,
+				6933091B209421240005C48C /* PropSelectView.m in Sources */,
+				698E7CDB20A15301004358D5 /* UIView+BAAnimation.m in Sources */,
 				6976E2D8207B1271003163C3 /* main.m in Sources */,
 				69075BED207C5B2100C4A5A8 /* EditFoodViewController.m in Sources */,
 				69075BE7207B5A6900C4A5A8 /* ShopFlavor.m in Sources */,
@@ -1075,9 +1185,11 @@
 				69075BFC207E08D200C4A5A8 /* PackageOrderViewController.m in Sources */,
 				69075BA6207B3A3F00C4A5A8 /* ReportViewController.m in Sources */,
 				6976E363207B1EDF003163C3 /* StaffInfo.m in Sources */,
+				698E7CD620A15301004358D5 /* NSDateFormatter+BAKit.m in Sources */,
 				69075BCF207B46BD00C4A5A8 /* SettingsViewController.m in Sources */,
 				6976E354207B188F003163C3 /* MJRefreshHeader.m in Sources */,
 				6976E36C207B22E6003163C3 /* LoginViewController.m in Sources */,
+				698C89002099BD8800B48A25 /* OrderViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1249,6 +1361,7 @@
 			baseConfigurationReference = 1F26F30467C2EB660CDEFA75 /* Pods-HangAus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z657UM2C6Z;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1258,6 +1371,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hangaus.HangAus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1267,6 +1381,7 @@
 			baseConfigurationReference = 313C650C505BC910261E9C04 /* Pods-HangAus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z657UM2C6Z;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1276,6 +1391,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hangaus.HangAus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

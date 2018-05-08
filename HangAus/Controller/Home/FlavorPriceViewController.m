@@ -26,6 +26,7 @@
     self.title=@"口味价格";
     self.tableView.tableFooterView=[[UIView alloc]init];
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 -(void)save{
     SubfoodPriceViewController*subfood=[[SubfoodPriceViewController alloc]init];
@@ -36,6 +37,7 @@
     [UniHttpTool getwithparameters:nil option:GetShopFlavor success:^(id json) {
         for (NSDictionary*dict in json[@"data"]) {
              ShopFlavor*shopflavor=[ShopFlavor mj_objectWithKeyValues:dict];
+            [shopflavor bg_saveOrUpdate];
             [temp addObject:shopflavor];
         }
         self.shopflavorArray=temp;
@@ -46,6 +48,13 @@
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     return 1;
     
+}
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row%2==1) {
+        cell.backgroundColor = KColor(223, 239, 246);
+    }else{
+        cell.backgroundColor = [UIColor whiteColor];
+    }
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.shopflavorArray.count;

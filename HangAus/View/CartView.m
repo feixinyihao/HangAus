@@ -18,12 +18,13 @@
 -(instancetype)initWithFrame:(CGRect)frame{
     if ([super initWithFrame:frame]) {
         if (self) {
-            UIImageView*cartImage=[[UIImageView alloc]initWithFrame:frame];
+            self.backgroundColor=KColor(240, 240, 240);
+            UIImageView*cartImage=[[UIImageView alloc]initWithFrame:CGRectMake((frame.size.width-30)/2, (frame.size.width-30)/2, 30, 30)];
             [cartImage setImage:[UIImage imageNamed:@"cart_air"]];
             self.cartImageview=cartImage;
             [self addSubview:self.cartImageview];
-            
-            UILabel*numLabel=[[UILabel alloc]initWithFrame:CGRectMake(frame.size.width, -10, 16, 16)];
+            self.layer.cornerRadius=frame.size.width/2;
+            UILabel*numLabel=[[UILabel alloc]initWithFrame:CGRectMake(frame.size.width-5, -5, 16, 16)];
             numLabel.backgroundColor=[UIColor redColor];
             numLabel.layer.masksToBounds=YES;
             numLabel.layer.cornerRadius=8;
@@ -36,6 +37,17 @@
         }
     }
     return self;
+}
+-(void)setNum:(NSInteger)num{
+    _num=num;
+    if (num>0) {
+        [self.cartImageview setImage:[UIImage imageNamed:@"cart_full"]];
+        self.numLabel.text=[NSString stringWithFormat:@"%ld",self.num];
+        self.numLabel.hidden=NO;
+    }else{
+        [self.cartImageview setImage:[UIImage imageNamed:@"cart_air"]];
+        self.numLabel.hidden=YES;
+    }
 }
 -(void)reload{
     if (self.num>0) {

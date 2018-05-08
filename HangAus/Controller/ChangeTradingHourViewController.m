@@ -16,6 +16,7 @@
 #import "TradingHourCell.h"
 #import "MBProgressHUD+MJ.h"
 #import <XXPickerView.h>
+#import "MBProgressHUD+MJ.h"
 @interface ChangeTradingHourViewController ()<WeekSelectViewControllerDelegate,TradingHourCellDelegate,XXPickerViewDelegate>
 
 
@@ -46,15 +47,15 @@
 }
 
 -(void)setupData{
-    StaffInfo*staffinfo=[StaffInfo getStaffInfo];
-    NSDictionary*parm=@{@"dwShopID":@(staffinfo.dwShopID)};
-    [UniHttpTool getwithparameters:parm option:GetShopTradinghour success:^(id json) {
+    [MBProgressHUD showHUDAddedTo:nil animated:YES];
+    [UniHttpTool getwithparameters:nil option:GetShopTradinghour success:^(id json) {
         for (NSDictionary*dict in json[@"data"]) {
             TradingHour*th=[TradingHour mj_objectWithKeyValues:dict];
             [self.tradingHourArray addObject:th];
         }
         [self.tableView reloadData];
         self.saveBtn.frame=CGRectMake(20, self.tradingHourArray.count*50+50, kScreenW-40, 50);
+        [MBProgressHUD hideHUDForView:nil animated:YES];
     }];
     
    

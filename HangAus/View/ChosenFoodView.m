@@ -11,6 +11,10 @@
 #import "CustomButton.h"
 #import "ShowFood.h"
 #import <BGFMDB.h>
+#import "ChosenPackageFoodView.h"
+@interface ChosenFoodView()<ChosenPackageFoodViewDelegate>
+
+@end
 @implementation ChosenFoodView
 
 -(instancetype)initWithFrame:(CGRect)frame chosenFoods:(NSArray*)chosenFoods{
@@ -29,8 +33,7 @@
     for (UIView*view in self.subviews) {
         [view removeFromSuperview];
     }
-    CGRect rect=CGRectMake(0, 0, 0, 0);
-    BOOL isNewline=NO;
+
     if (chosenFoods.count==0) {
         UILabel*textL=[[UILabel alloc]init];
         textL.frame=self.bounds;
@@ -42,21 +45,13 @@
     }else{
         for (int i=0; i<chosenFoods.count; i++) {
             ChosenFood*chosenFood=chosenFoods[i];
-            CustomButton*nameBtn=[[CustomButton alloc]init];
-            nameBtn.tag=i+1000;
-            NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenFood.dwShowFoodID))]];
-            ShowFood*showfood=[array firstObject];
-            CGSize textSzie=[showfood.szDispName sizeWithAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:10]}];
-            CGSize size=CGSizeMake(textSzie.width+20, textSzie.height);
-            if ((20+rect.origin.x+rect.size.width+size.width)>self.bounds.size.width) {
-                isNewline=YES;
-                rect=CGRectMake(0, 0, 0, 0);
-            }
-            nameBtn.frame=CGRectMake(10+rect.origin.x+rect.size.width, 10+isNewline*25, size.width+10, 20);
-            rect=nameBtn.frame;
-            [nameBtn setTitle:showfood.szDispName forState:UIControlStateNormal];
-            [nameBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-            [self addSubview:nameBtn];
+            
+            ChosenPackageFoodView*packagefood=[[ChosenPackageFoodView alloc]init];
+            packagefood.tag=1000+i;
+            packagefood.delegate=self;
+            packagefood.frame=CGRectMake(0, 30*i+10, kScreenW, 20);
+            packagefood.chosenfood=chosenFood;
+            [self addSubview:packagefood];
         }
         
     }
@@ -73,5 +68,20 @@
 -(void)reload{
     [self setupWithChosenFoods:self.chosenFoods];
 
+}
+
+-(void)ChosenPackageFoodViewDelete:(ChosenPackageFoodView *)ChosenPackageFoodView{
+    DLog(@"%ld",ChosenPackageFoodView.tag);
+    [self.chosenFoods removeObjectAtIndex:ChosenPackageFoodView.tag-1000];
+    [self setupWithChosenFoods:self.chosenFoods];
+    if ([self.delegate respondsToSelector:@selector(ChosenFoodViewBtnClick:withChosenFoods:)]) {
+        [self.delegate ChosenFoodViewBtnClick:nil withChosenFoods:self.chosenFoods];
+    }
+}
+
+-(void)ChosenPackageFoodViewincreaseStatus:(BOOL)increaseStatus withChosenPackageFoodView:(ChosenPackageFoodView *)ChosenPackageFoodView{
+    if ([self.delegate respondsToSelector:@selector(ChosenFoodViewBtnClick:withChosenFoods:)]) {
+        [self.delegate ChosenFoodViewBtnClick:nil withChosenFoods:self.chosenFoods];
+    }
 }
 @end

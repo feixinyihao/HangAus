@@ -108,12 +108,7 @@
         [self.downBtn removeFromSuperview];
         [self.editBtn removeFromSuperview];
        
-        if (self.food.dwShowProp==2) {
-            [self.contentView addSubview:self.packgesBtn];
-            [self.packgesBtn addTarget:self action:@selector(packageOrder:) forControlEvents:UIControlEventTouchUpInside];
-            self.packgesBtn.orderNum=self.food.orderNum;
-            [self.ppBtn removeFromSuperview];
-        }else{
+        if (!self.food.dwCookWayProp&&!self.food.dwFlavorProp&&!self.food.dwIncSubFood&&self.food.dwShowProp!=2) {
             self.ppBtn.frame=CGRectMake(kScreenW*0.75-20-80, 60, 80, 20);
             self.ppBtn.decreaseHide = YES;
             self.ppBtn.shakeAnimation = YES;
@@ -133,6 +128,17 @@
             };
             [self.packgesBtn removeFromSuperview];
             [self.contentView addSubview:self.ppBtn];
+        }else{
+            
+            [self.contentView addSubview:self.packgesBtn];
+            [self.packgesBtn addTarget:self action:@selector(packageOrder:) forControlEvents:UIControlEventTouchUpInside];
+            self.packgesBtn.orderNum=self.food.orderNum;
+            if (self.food.dwShowProp==2) {
+                [self.packgesBtn setTitle:@"随心配" forState:UIControlStateNormal];
+            }else{
+                [self.packgesBtn setTitle:@"选口味" forState:UIControlStateNormal];
+            }
+            [self.ppBtn removeFromSuperview];
         }
 
     }else{

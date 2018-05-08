@@ -13,6 +13,8 @@
 #import "StaffToken.h"
 #import <MJExtension.h>
 #import "ChangePswViewController.h"
+#import "ShopInfo.h"
+#import "MainViewController.h"
 @interface LoginViewController ()
 @property(nonatomic,weak)UITextField*userNameField;
 @property(nonatomic,weak)UITextField*passWordField;
@@ -50,7 +52,7 @@
     userNameField.leftView=headView;
     userNameField.leftViewMode = UITextFieldViewModeAlways;
     userNameField.placeholder=@"请输入用户名";
-    userNameField.text=@"330110005";
+    userNameField.text=@"cxr";
     self.userNameField=userNameField;
     [self.scrollView addSubview:userNameField];
     
@@ -97,9 +99,17 @@
         [token save];
         StaffInfo*info=[StaffInfo mj_objectWithKeyValues:dict[@"StaffInfo"]];
         [info save];
-        ChangePswViewController*change=[[ChangePswViewController alloc]init];
-        change.oldPassword=self.passWordField.text;
-        [self.navigationController pushViewController:change animated:YES];
+        
+        ShopInfo*shopinfo=[ShopInfo getShopInfo];
+        if ((shopinfo.dwShopStat&131072)>0) {
+            MainViewController*main=[[MainViewController alloc]init];
+            self.view.window.rootViewController=main;
+        }else{
+            ChangePswViewController*change=[[ChangePswViewController alloc]init];
+            change.oldPassword=self.passWordField.text;
+            [self.navigationController pushViewController:change animated:YES];
+        }
+        
         [MBProgressHUD hideHUD];
         
        

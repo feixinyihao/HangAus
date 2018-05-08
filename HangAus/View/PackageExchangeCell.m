@@ -11,11 +11,13 @@
 #import "ShowFood.h"
 #import <UIImageView+WebCache.h>
 #import <PPNumberButton.h>
+#import "OrderFood.h"
 @interface PackageExchangeCell()
 @property(nonatomic,strong)UIImageView*foodImageView;
 @property(nonatomic,strong)UILabel*foodNameL;
 @property(nonatomic,strong)UIButton*editBtn;
 @property(nonatomic,strong)UILabel*numL;
+@property(nonatomic,strong)UILabel*detailTextL;
 @end
 @implementation PackageExchangeCell
 
@@ -32,25 +34,34 @@
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
 }
--(void)setShowfood:(ShowFood *)showfood{
-    _showfood=showfood;
+
+-(void)setOrderfood:(OrderFood *)orderfood{
+    _orderfood=orderfood;
     [self setupView];
 }
 -(void)setupView{
-    [self.foodImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@.jpg",KrootImagePath,[CommonFunc md5:[NSString stringWithFormat:@"%ld",self.showfood.dwShowFoodID]]]] placeholderImage:[UIImage imageNamed:@"coca"] options:SDWebImageRefreshCached];
+    [self.foodImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@.jpg",KrootImagePath,[CommonFunc md5:[NSString stringWithFormat:@"%ld",self.orderfood.dwShowFoodID]]]] placeholderImage:[UIImage imageNamed:@"coca"] options:SDWebImageRefreshCached];
+    self.foodImageView.layer.cornerRadius=5;
+    self.foodImageView.layer.masksToBounds=YES;
     [self.contentView addSubview:self.foodImageView];
     
-    self.foodNameL.text=self.showfood.szDispName;
+    self.foodNameL.text=self.orderfood.szShowFoodName;
     [self.contentView addSubview:self.foodNameL];
     
+    self.detailTextL.text=[NSString stringWithFormat:@"%@ %@%@",self.orderfood.szSelCookWay,self.orderfood.szSelFlavor,self.orderfood.szSelSubFood];
+    if ([[self.detailTextL.text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]
+        ||!self.detailTextL.text||!self.detailTextL.text.length||[self.detailTextL.text isEqual:[NSNull null]]) {
+        self.detailTextL.text=@"Default";
+    }
+    [self.contentView addSubview:self.detailTextL];
   
     
-    if (self.showfood.dwDefQuantity>1) {
+    if (self.orderfood.dwQuantity>1) {
         [self.editBtn removeFromSuperview];
         self.numL.textColor=[UIColor orangeColor];
         self.numL.font=[UIFont systemFontOfSize:15];
         self.numL.textAlignment=NSTextAlignmentRight;
-        self.numL.text=[NSString stringWithFormat:@"✘%ld",self.showfood.dwDefQuantity];
+        self.numL.text=[NSString stringWithFormat:@"✘%ld",self.orderfood.dwQuantity];
         [self.contentView addSubview:self.numL];
     }else{
         [self.numL removeFromSuperview];
@@ -70,9 +81,9 @@
 }
 -(UILabel *)foodNameL{
     if (!_foodNameL) {
-        _foodNameL=[[UILabel alloc]initWithFrame:CGRectMake(70, 10, kScreenW/2, 40)];
+        _foodNameL=[[UILabel alloc]initWithFrame:CGRectMake(70, 10, kScreenW/2, 20)];
         _foodNameL.textColor=[UIColor orangeColor];
-        _foodNameL.font=[UIFont systemFontOfSize:15];
+        _foodNameL.font=[UIFont systemFontOfSize:17];
     }
     return _foodNameL;
 }
@@ -80,7 +91,7 @@
     if (!_editBtn) {
         _editBtn=[[UIButton alloc]initWithFrame:CGRectMake(kScreenW-60, 10, 40, 40)];
         _editBtn.tag=999;
-        [_editBtn setImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
+        [_editBtn setImage:[UIImage imageNamed:@"exchange"] forState:UIControlStateNormal];
     }
     return _editBtn;
 }
@@ -89,5 +100,15 @@
         _numL=[[UILabel alloc]initWithFrame:CGRectMake(kScreenW-100, 10, 80, 40)];
     }
     return _numL;
+}
+
+-(UILabel *)detailTextL{
+    if (!_detailTextL) {
+        _detailTextL=[[UILabel alloc]init];
+        _detailTextL.frame=CGRectMake(70, 30,0.7*kScreenW, 20);
+        _detailTextL.textColor=[UIColor grayColor];
+        _detailTextL.font=[UIFont systemFontOfSize:12];
+    }
+    return _detailTextL;
 }
 @end

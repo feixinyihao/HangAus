@@ -12,6 +12,7 @@
 #import "MBProgressHUD+MJ.h"
 #import "ShopInfo.h"
 #import <MJExtension.h>
+#import "MainViewController.h"
 @interface ProtocolViewController ()
 @property(nonatomic,weak)UIButton*btn;
 @end
@@ -26,26 +27,31 @@
     self.navigationItem.backBarButtonItem = backbutton;
     self.view.backgroundColor=[UIColor whiteColor];
     [self setupUI];
-    [self setupData];
+    [self getData];
 }
--(void)setupData{
+
+-(void)getData{
     [UniHttpTool getwithparameters:nil option:GetShop success:^(id json) {
         NSArray*infoArray=json[@"data"];
         ShopInfo*shopinfo=[ShopInfo mj_objectWithKeyValues:[infoArray firstObject]];
+        [shopinfo save];
         UILabel*msgL=[[UILabel alloc]initWithFrame:CGRectMake(0, 200, kScreenW, 30)];
         msgL.textAlignment=NSTextAlignmentCenter;
         msgL.textColor=[UIColor redColor];
         [self.view addSubview:msgL];
-        
         if ((shopinfo.dwShopStat&2)<=0) {
             msgL.text=@"您未审核通过，请耐心等待";
-           // self.btn.hidden=YES;
+            self.btn.hidden=YES;
             self.title=@"";
-        }else if ((shopinfo.dwShopStat&1024)<=0||(shopinfo.dwShopStat&512)<=0||(shopinfo.dwShopStat&256)<=0){
-             msgL.text=@"您暂时还无法使用，请联系商家";
-          //  self.btn.hidden=YES;
+        }else if ((shopinfo.dwShopStat&1024)<=0&&(shopinfo.dwShopStat&512)<=0&&(shopinfo.dwShopStat&256)<=0){
+            msgL.text=@"您暂时还无法使用，请联系商家";
+            self.btn.hidden=YES;
             self.title=@"";
         }
+ //       else if ((shopinfo.dwShopStat&131072)>0){
+//            MainViewController*main=[[MainViewController alloc]init];
+//            self.view.window.rootViewController=main;
+//        }
     }];
 }
 - (void)didReceiveMemoryWarning {

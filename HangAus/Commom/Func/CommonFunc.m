@@ -250,4 +250,41 @@
     
     return image;
 }
++(void)alert:(NSString*)title withMessage:(NSString*)message :(void (^)(UIAlertAction *acton))success{
+    UIAlertController *alertController=[UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];//创建界面
+    NSString*signout=@"确定";
+    UIAlertAction *cancelAction=[UIAlertAction actionWithTitle:signout style:UIAlertActionStyleDefault handler:^(UIAlertAction *acton){
+        if (success) {
+            success(acton);
+        }
+        
+    }];
+    NSString*cancel=@"取消";
+    UIAlertAction *otherAction=[UIAlertAction actionWithTitle:cancel style:UIAlertActionStyleDefault handler:^(UIAlertAction *acton){}];
+    
+    [alertController addAction:cancelAction];
+    [alertController addAction:otherAction];
+    [[self getCurrentVC] presentViewController: alertController animated:YES completion:nil];
+}
+
++ (void)actionSheet:(NSString*)title1 withTitle2:(NSString*)title2 {
+    
+    UIAlertController *actionSheetController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *showAllInfoAction = [UIAlertAction actionWithTitle:title1 style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *pickAction = [UIAlertAction actionWithTitle:title2 style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    [actionSheetController addAction:cancelAction];
+    [actionSheetController addAction:pickAction];
+    [actionSheetController addAction:showAllInfoAction];
+    
+    [[self getCurrentVC] presentViewController:actionSheetController animated:YES completion:nil];
+}
 @end

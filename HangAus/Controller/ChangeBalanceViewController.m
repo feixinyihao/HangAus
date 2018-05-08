@@ -15,11 +15,13 @@
 #import "MBProgressHUD+MJ.h"
 #import "ShowGroup.h"
 #import "MainViewController.h"
+#import "EditFoodViewController.h"
+#import <BGFMDB.h>
 @interface ChangeBalanceViewController ()<ChangeBalanceCellDelegate,UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)NSArray*showFoodArray;
 @property(nonatomic,weak)UITableView*tableView;
 @property(nonatomic,assign)NSInteger setupNum;
-
+@property(nonatomic,assign)BOOL isPop;
 @property(nonatomic,weak)UIButton*nextBtn;
 @end
 
@@ -33,6 +35,16 @@
     [self setupData];
    
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    if (_isPop) {
+        [self.tableView reloadData];
+        
+    }else{
+        
+    }
+    _isPop=YES;
+}
 -(void)setupData{
     [MBProgressHUD showHUDAddedTo:nil animated:YES];
     ShowGroup*showGroup=self.selGroupArray[self.setupNum-1];
@@ -44,7 +56,21 @@
             NSMutableArray*temp=[NSMutableArray array];
             for (NSDictionary*dict in json[@"data"]) {
                 ShowFood*showFood=[ShowFood mj_objectWithKeyValues:dict];
-                [temp addObject:showFood];
+                if (!(showFood.dwSoldProp==2&&showFood.dwDefQuantity==0)) {
+                    if (showFood.dwShowProp==2) {
+                        for (int i=0; i<showFood.ChosenFoods.count; i++) {
+                            ChosenFood*chosenfood=showFood.ChosenFoods[i];
+                            NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
+                            ShowFood*chosenShowfood=[array firstObject];
+                            chosenfood.szDisFoodName=chosenShowfood.szDispName;
+                            chosenfood.dwSoldPrice=chosenShowfood.dwSoldPrice;
+                            chosenfood.dwShowProp=chosenShowfood.dwShowProp;
+                        }
+                       
+                    }
+                    [temp addObject:showFood];
+                }
+                
             }
             self.showFoodArray=temp;
             [self.tableView reloadData];
@@ -113,24 +139,37 @@
     cell.delegate=self;
     return cell;
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    ShowFood*showFood=self.showFoodArray[indexPath.row];
+    if (showFood.dwShowProp!=1) {
+        EditFoodViewController*edit=[[EditFoodViewController alloc]init];
+        edit.showFood=showFood;
+        [self.navigationController pushViewController:edit animated:YES];
+    }
+}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 80;
+    ShowFood*showFood=self.showFoodArray[indexPath.row];
+    if (showFood.dwShowProp==1) {
+        return 80;
+    }else{
+        return 100;
+    }
+    
 }
 
 -(void)ChangeBalanceCellBtnClick:(UIButton *)button withCell:(ChangeBalanceCell *)cell withStr:(NSString *)str{
     NSIndexPath*indexPath=[self.tableView indexPathForCell:cell];
     ShowFood*showFood=self.showFoodArray[indexPath.row];
-    showFood.dwUnitPrice=[str floatValue]*100;
-    NSDictionary*parm=showFood.mj_keyValues;
-    SoldFood*sold=[SoldFood mj_objectWithKeyValues:parm];
-    NSDictionary*soldParm=sold.mj_keyValues;
-    [UniHttpTool getwithparameters:soldParm option:SetSoldFood success:^(id json) {
-        if ([json[@"ret"] integerValue]==0) {
-            [MBProgressHUD showSuccess:@"修改成功"];
-        }else{
-            KShowServerMessage(json[@"error"])
-        }
+    NSDictionary*dict=@{@"dwShowFoodID":@(showFood.dwShowFoodID),
+                        @"dwSoldPrice":@(roundf([str floatValue]*100)),
+                        @"dwUnitPrice":@(roundf([str floatValue]*100)),
+                        @"dwMinPrice":@(roundf([str floatValue]*100)),
+                        };
+    
+    [UniHttpTool getwithparameters:dict option:SetShowfoodprice success:^(id json) {
+        [MBProgressHUD showSuccess:@"修改成功"];
+        
     }];
 }
 

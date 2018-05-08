@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ShowFood;
+@class ShowFood,OrderFood;
 @interface PackageExchangeCell : UITableViewCell
-@property(nonatomic,strong)ShowFood*showfood;
+
+@property(nonatomic,strong)OrderFood*orderfood;
 +(PackageExchangeCell*)initWithTableView:(UITableView*)tableView;
+
 @end

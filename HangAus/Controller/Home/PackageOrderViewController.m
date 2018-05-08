@@ -70,14 +70,15 @@
     orderfoodPackage.szSelSubFood=@"";
     orderfoodPackage.szSelFlavor=@"";
     orderfoodPackage.dwQuantity=1;
-    orderfoodPackage.dwFoodPrice=self.showfood.dwTotalPrice;
+    orderfoodPackage.dwFoodPrice=self.showfood.dwSoldPrice;
     orderfoodPackage.dwCookPrice=0;
     orderfoodPackage.dwSubFoodPrice=0;
     orderfoodPackage.dwFlavorPrice=0;
-    orderfoodPackage.dwFoodDiscount=self.showfood.dwDiscount;
+    orderfoodPackage.dwFoodDiscount=0;
     orderfoodPackage.dwSubFoodDiscount=0;
     orderfoodPackage.szShowFoodName=self.showfood.szDispName;
     orderfoodPackage.dwGroupID=self.showfood.dwGroupID;
+    orderfoodPackage.szMemo=@"";
     NSMutableArray*temp=[NSMutableArray array];
     [temp addObject:orderfoodPackage];
     for (int i=0; i<self.showfoods.count; i++) {
@@ -91,18 +92,20 @@
         for (ShopCookway*cookway in [ShopCookway bg_findAll:nil]) {
             if ((chosenShowfood.dwCookWayProp&cookway.dwCWID)==cookway.dwCWID) {
                 orderfood.dwSelCookWay=cookway.dwCWID;
+                orderfood.szSelCookWay=cookway.szName;
                 break;
             }
         }
         orderfood.szSelSubFood=@"";
         orderfood.szSelFlavor=@"";
         orderfood.dwQuantity=chosenShowfood.dwDefQuantity;
-        orderfood.dwFoodPrice=chosenShowfood.dwTotalPrice;
+        orderfood.dwFoodPrice=chosenShowfood.dwSoldPrice;
         orderfood.dwCookPrice=0;
         orderfood.dwSubFoodPrice=0;
         orderfood.dwFlavorPrice=0;
         orderfood.dwFoodDiscount=chosenShowfood.dwDiscount;
         orderfood.dwSubFoodDiscount=0;
+        orderfood.szShowFoodName=chosenShowfood.szDispName;
         [temp addObject:orderfood];
     }
     self.orderFoods=temp;
@@ -155,14 +158,14 @@
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     PackageExchangeCell*cell=[PackageExchangeCell initWithTableView:tableView];
-    cell.showfood=self.showfoods[indexPath.row];
+    //cell.showfood=self.showfoods[indexPath.row];
     return cell;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath==self.cellIndexPath&&!self.isRepeatClick) {
         return self.cellH;
     }else{
-        return 50;
+        return 60;
     }
     
    
@@ -186,12 +189,12 @@
         //食物属性选择
         self.isRepeatClick=NO;
         ShowFood*food=self.showfoods[indexPath.row];
-        if (food.dwIncSubFood||food.dwFlavorProp) {
-
-             ChosenFoodPropView*propview=[[ChosenFoodPropView alloc]initWithShowFood:food isPackage:YES];
-            propview.delegate=self;
-            [self.navigationController.view addSubviewWithAnimation:propview];
-        }
+//        if (food.dwIncSubFood||food.dwFlavorProp) {
+//
+//             ChosenFoodPropView*propview=[[ChosenFoodPropView alloc]initWithShowFood:food isPackage:YES];
+//            propview.delegate=self;
+//            [self.navigationController.view addSubviewWithAnimation:propview];
+//        }
         if (food.dwDefQuantity>1) {
             return;
         }

@@ -17,7 +17,7 @@
 #import <MJExtension.h>
 #import "ChoseSubFoodView.h"
 #import <BGFMDB.h>
-@interface WithTextCell()<UITextFieldDelegate,ChosenFoodViewDelegate,ChoseSubFoodViewDelegate>
+@interface WithTextCell()<UITextFieldDelegate,ChosenFoodViewDelegate,ChoseSubFoodViewDelegate,UITextFieldDelegate>
 @property(nonatomic,strong)UILabel*label;
 @property(nonatomic,strong)UITextField*textField;
 
@@ -52,6 +52,8 @@
     self.detailTextLabel.font=[UIFont systemFontOfSize:14];
     if (self.cellWithView.keyboard) {
         self.textField.keyboardType=UIKeyboardTypeDecimalPad;
+        self.textField.delegate=self;
+        
     }
    // DLog(@"--%ld---%@",self.cellWithView.subfoodprop,self.cellWithView.chosenFoods);
     if ([NSStringFromClass([UILabel class]) isEqualToString:self.cellWithView.viewClass]) {
@@ -121,6 +123,11 @@
             [view removeFromSuperview];
         }
         self.foodView.chosenFoods=[NSMutableArray arrayWithArray:self.cellWithView.chosenFoods];
+        CGFloat H =self.cellWithView.chosenFoods.count*30+10;
+        if (H<60) {
+            H=60;
+        }
+        self.foodView.frame=CGRectMake(0, 0, kScreenW, H);
         [self.foodView reload];
         [self.contentView addSubview:self.foodView];
     }else if (self.cellWithView.incSubfoodprop){
@@ -236,6 +243,82 @@
 
     if ([self.delegate respondsToSelector:@selector(reloadTotalPrice:)]) {
         [self.delegate reloadTotalPrice:incSubfood];
+    }
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    
+    BOOL isHaveDian=YES;
+    if ([textField.text rangeOfString:@"."].location==NSNotFound) {
+        isHaveDian=NO;
+    }
+    if ([string length]>0)
+    {
+        unichar single=[string characterAtIndex:0];//当前输入的字符
+        if ((single >='0' && single<='9') || single=='.')//数据格式正确
+        {
+            //首字母不能为0和小数点
+            if([textField.text length]==0){
+                if(single == '.'){
+                    //[self alertView:@"亲，第一个数字不能为小数点"];
+                    [textField.text stringByReplacingCharactersInRange:range withString:@""];
+                    return NO;
+                }
+                if (single == '0') {
+                    textField.text=@"0.";
+                    return NO;
+                }
+            }
+            if (!isHaveDian&&single!='.') {
+                if (textField.text.length>1) {
+                    return NO;
+                }else{
+                    return YES;
+                }
+            }
+            if (single=='.')
+            {
+                if(!isHaveDian)//text中还没有小数点
+                {
+                    isHaveDian=YES;
+                    return YES;
+                }else
+                {
+                    //[self alertView:@"亲，您已经输入过小数点了"];
+                    [textField.text stringByReplacingCharactersInRange:range withString:@""];
+                    return NO;
+                }
+            }
+            else
+            {
+                if (isHaveDian)//存在小数点
+                {
+                    
+                    //判断小数点的位数
+                    NSRange ran=[textField.text rangeOfString:@"."];
+                    NSInteger tt=range.location-ran.location;
+                    if (tt <= 2){
+                        return YES;
+                    }else{
+                        //[self alertView:@"亲，您最多输入两位小数"];
+                        return NO;
+                    }
+                }
+                else
+                {
+                    return YES;
+                }
+            }
+        }else{//输入的数据格式不正确
+            
+            [textField.text stringByReplacingCharactersInRange:range withString:@""];
+            return NO;
+        }
+    }
+    else
+    {
+        return YES;
     }
 }
 @end

@@ -12,4 +12,9 @@
 +(NSArray *)bg_unionPrimaryKeys{
     return @[@"dwFVID",@"dwShopID"];
 }
+
+-(void)setDwDefValue:(NSInteger)dwDefValue{
+    _dwDefValue=dwDefValue;
+    _dwCurrentValue=dwDefValue;
+}
 @end

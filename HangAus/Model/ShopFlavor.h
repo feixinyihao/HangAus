@@ -23,5 +23,8 @@
 @property(nonatomic,assign)NSInteger dwShopID;
 @property(nonatomic,assign)NSInteger dwMinValue;
 
+
+@property(nonatomic,assign)NSInteger dwCurrentValue;
+
 +(NSArray *)bg_unionPrimaryKeys;
 @end

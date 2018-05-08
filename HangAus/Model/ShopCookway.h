@@ -10,6 +10,7 @@
 
 @interface ShopCookway : NSObject
 @property(nonatomic,copy)NSString*szName;
+@property(nonatomic,copy)NSString*szShowName;
 @property(nonatomic,assign)NSInteger dwCWID;
 @property(nonatomic,assign)NSInteger dwFoodID;
 @property(nonatomic,assign)NSInteger dwSupFlavor;

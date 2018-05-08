@@ -18,6 +18,7 @@
 #import "UniHttpTool.h"
 #import <MJExtension.h>
 #import "SubfoodBtn.h"
+#import <PPNumberButton.h>
 @interface ChosenFoodPropView()<SubfoodBtnDelegate,FlavorButtonDelegate>
 @property(nonatomic,strong)ShowFood*showFood;
 @property(nonatomic,weak)UIView*backgroundView;
@@ -41,6 +42,8 @@
 @property(nonatomic,assign)NSInteger priceOffset;
 @property(nonatomic,assign)NSInteger cookwayPrice;
 
+@property(nonatomic,weak)UIButton*addBtn;
+@property(nonatomic,weak)PPNumberButton*ppBtn;
 @end
 @implementation ChosenFoodPropView
 
@@ -95,7 +98,7 @@
 }
 -(void)dataUpdate{
     ShopSubFood*subfood=[self.subfoodArray firstObject];
-    //大于10天更新
+    //大于1天更新
     if (([CommonFunc getCurrentDate]-[CommonFunc getTimestanps:subfood.bg_updateTime])>86400) {
         [UniHttpTool getwithparameters:nil option:GetShopSubFood success:^(id json) {
             for (NSDictionary *dict in json[@"data"]) {
@@ -265,6 +268,7 @@
     addbtn.layer.masksToBounds=YES;
     addbtn.titleLabel.font=[UIFont systemFontOfSize:15];
     addbtn.layer.cornerRadius=15;
+    self.addBtn=addbtn;
     [bottomView addSubview:addbtn];
     
     UILabel*priceL=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, 100, 30)];
@@ -272,16 +276,36 @@
     self.priceL=priceL;
     self.price=self.showFood.dwSoldPrice;
     self.priceL.text=[NSString stringWithFormat:@"$%.2f",self.price/100.0];
+    
+    PPNumberButton*ppBtn=[[PPNumberButton alloc]init];
+    self.ppBtn=ppBtn;
+    self.ppBtn.frame=CGRectMake(bottomView.bounds.size.width-100, 15, 80, 20);
+    self.ppBtn.decreaseHide = YES;
+    self.ppBtn.shakeAnimation = YES;
+    self.ppBtn.minValue=1;
+    self.ppBtn.maxValue=10;
+    self.ppBtn.currentNumber=self.showFood.orderNum;
+    self.ppBtn.increaseImage = [UIImage imageNamed:@"increase"];
+    self.ppBtn.decreaseImage = [UIImage imageNamed:@"decrease"];
+    self.ppBtn.longPressSpaceTime=CGFLOAT_MAX;
+    [bottomView addSubview:self.ppBtn];
     if (self.isPackage) {
         [addbtn setTitle:@"确定" forState:UIControlStateNormal];
     }else{
+        if (self.showFood.orderNum) {
+            self.addBtn.hidden=YES;
+           
+        }else{
+            self.ppBtn.hidden=YES;
+            [addbtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+        }
         [bottomView addSubview:priceL];
-        [addbtn setTitle:@"加入购物车" forState:UIControlStateNormal];
+       
     }
     
 }
-//加入购物车
--(void)order:(UIButton*)sender{
+
+-(void)order{
     OrderFood*orderfood=[[OrderFood alloc]init];
     if (self.showFood.dwIncSubFood) {
         orderfood.szSelFlavor=@"";
@@ -331,7 +355,7 @@
         orderfood.dwFoodPrice=self.showFood.dwSoldPrice;
         orderfood.dwCookPrice=self.dwCookPrice;
         orderfood.dwSubFoodPrice=0;
-   
+        
         orderfood.dwFlavorPrice=flavorprice;
         orderfood.dwFoodDiscount=0;
         orderfood.dwSubFoodDiscount=0;
@@ -342,6 +366,20 @@
     if ([self.delegate respondsToSelector:@selector(ChosenFoodPropViewOrderWithOrderFood:withIndexPath:)]) {
         [self.delegate ChosenFoodPropViewOrderWithOrderFood:orderfood withIndexPath:self.indexPath];
     }
+}
+//加入购物车
+-(void)order:(UIButton*)sender{
+    [self order];
+    self.ppBtn.hidden=NO;
+    DLog(@"%ld",self.showFood.orderNum);
+    self.ppBtn.currentNumber=1;
+    self.addBtn.hidden=YES;
+    self.ppBtn.resultBlock = ^(PPNumberButton *ppBtn, CGFloat number, BOOL increaseStatus) {
+        if (increaseStatus) {
+            [self order];
+        }
+    };
+    
 }
 -(void)handleSingleTap:(id)sender{
     [self removeFromSuperview];

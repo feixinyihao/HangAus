@@ -28,6 +28,7 @@
     [self setupData];
     self.title=@"烹饪价格";
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 -(void)setupData{
@@ -36,6 +37,7 @@
         NSMutableArray*temp=[NSMutableArray array];
         for (NSDictionary*dict in json[@"data"]) {
             ShopCookway*cookway=[ShopCookway mj_objectWithKeyValues:dict];
+            [cookway bg_saveOrUpdate];
             [temp addObject:cookway];
         }
         self.cookwayArray=temp;
@@ -63,6 +65,14 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 60;
+}
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row%2==1) {
+        cell.backgroundColor = KColor(223, 239, 246);
+    }else{
+        cell.backgroundColor = [UIColor whiteColor];
+    }
+    
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     SubFoodCell*cell=[SubFoodCell initWithTableView:tableView];

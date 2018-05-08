@@ -18,4 +18,8 @@
 @property(nonatomic,assign)NSInteger dwQuantity;
 @property(nonatomic,copy)NSString*szMemo;
 
+//自定义
+@property(nonatomic,copy)NSString*szDisFoodName;
+@property(nonatomic,assign)NSInteger dwSoldPrice;
+@property(nonatomic,assign)NSInteger dwShowProp;
 @end

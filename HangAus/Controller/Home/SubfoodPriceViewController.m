@@ -14,6 +14,7 @@
 #import "MBProgressHUD+MJ.h"
 #import <BGFMDB.h>
 #import "SetupFoodKindViewController.h"
+#import "ShowFood.h"
 @interface SubfoodPriceViewController ()<UITableViewDelegate,UITableViewDataSource,SubFoodCellDelegate>
 @property(nonatomic,weak)UITableView*tableView;
 @property(nonatomic,strong)NSArray*subfoodArray;
@@ -27,6 +28,7 @@
     [self setupData];
     self.title=@"配菜价格";
     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"保存" style:UIBarButtonItemStyleDone target:self action:@selector(save)];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 -(void)save{
     SetupFoodKindViewController*setupkkind=[[SetupFoodKindViewController alloc]init];
@@ -70,12 +72,21 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 60;
 }
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.row%2==1) {
+        cell.backgroundColor = KColor(223, 239, 246);
+    }else{
+        cell.backgroundColor = [UIColor whiteColor];
+    }
+   
+}
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     SubFoodCell*cell=[SubFoodCell initWithTableView:tableView];
     cell.subfood=self.subfoodArray[indexPath.row];
     cell.delegate=self;
     return cell;
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -87,8 +98,26 @@
                         @"dwUnitPrice":@(roundf([str floatValue]*100)),
                         @"szMemo":@""
                         };
-    [UniHttpTool getwithparameters:parm option:SetShopsubfoodprice success:^(id json) {
+    NSDictionary*dic=@{@"dwSFID":@(subfood.dwSFID)};
+    [UniHttpTool getwithparameters:dic option:GetShowFood success:^(id json) {
+        NSString*foodStr=@"";
+        for (NSDictionary*dict in json[@"data"]) {
+            foodStr=[foodStr stringByAppendingFormat:@"%@,",dict[@"szDispName"]];
+        }
+        if (foodStr.length>1) {
+            foodStr=[foodStr substringToIndex:foodStr.length-1];
+        }
+        [CommonFunc alert:@"修改会影响以下食物价格" withMessage:foodStr :^(UIAlertAction *acton) {
+            
+            [UniHttpTool getwithparameters:parm option:SetShopsubfoodprice success:^(id json) {
+                subfood.dwUnitPrice=roundf([str floatValue]*100);
+                [MBProgressHUD showSuccess:@"修改成功"];
+                [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }];
+        }];
     }];
+    
+   
     
 }
 -(NSArray *)subfoodArray{

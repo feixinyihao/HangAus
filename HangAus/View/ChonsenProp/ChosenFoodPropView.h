@@ -19,5 +19,6 @@
 -(instancetype)initWithShowFood:(ShowFood*)showfood;
 -(instancetype)initWithShowFood:(ShowFood *)showfood isPackage:(BOOL)package;
 
+@property(nonatomic,strong)NSArray*orderfoods;
 @property(nonatomic,strong)id <ChosenFoodPropViewDelegate>delegate;
 @end

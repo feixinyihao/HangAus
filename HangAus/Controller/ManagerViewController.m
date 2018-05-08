@@ -97,7 +97,7 @@
             ShowFood*showFood=self.showFoodArr[j];
            
             if (showFood.dwGroupID==showGroup.dwGroupID) {
-                if (!(showFood.dwSoldProp==2&&showFood.dwDefQuantity==0)) {
+                if (showFood.dwSoldPrice>0) {
                     [kindFoodArr addObject:showFood];
                 }
                 
@@ -152,7 +152,7 @@
                         for (NSDictionary*dict in json[@"data"]) {
                             ShowFood*showFood=[ShowFood mj_objectWithKeyValues:dict];
                             if (showFood.dwGroupID==group.dwGroupID) {
-                                if (!(showFood.dwDefQuantity==0&&showFood.dwSoldProp==2)) {
+                                if (showFood.dwSoldPrice>0) {
                                     [kindFoodArr addObject:showFood];
                                 }   
                                
@@ -274,7 +274,7 @@
     }else {
         FoodTableViewCell*cell=[FoodTableViewCell initWithTableView:tableView];
         cell.delegate=self;
-        cell.selectionStyle=UITableViewCellSelectionStyleNone;
+        //cell.selectionStyle=UITableViewCellSelectionStyleNone;
         if (self.foodKindArr.count>0) {
             FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
             NSArray*tempArr=foodkind.foodArr;
@@ -290,10 +290,19 @@
     // 如果点击的是右边的tableView，不做任何处理
     if (tableView == self.rightTableView){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+        FoodKindTest*foodkind=self.foodKindArr[indexPath.section];
+        NSArray*tempArr=foodkind.foodArr;
+        ShowFood*showfood=tempArr[indexPath.row];
+        EditFoodViewController*edit=[[EditFoodViewController alloc]init];
+        edit.showFood=showfood;
+        [self.navigationController pushViewController:edit animated:YES];
     }else{
         // 点击左边的tableView，设置选中右边的tableView某一行。左边的tableView的每一行对应右边tableView的每个分区
         //NSLog(@"%ld",indexPath.row);
         [self.rightTableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:indexPath.row] animated:YES scrollPosition:UITableViewScrollPositionTop];
+        NSIndexPath*tempIndexPath=[NSIndexPath indexPathForRow:0 inSection:indexPath.row];
+        [self.rightTableView  deselectRowAtIndexPath:tempIndexPath animated:YES];
         self.currentSelectIndexPath = indexPath;
         
     }

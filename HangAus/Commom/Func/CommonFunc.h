@@ -27,4 +27,7 @@
 根据颜色返回图片
  */
 + (UIImage *)imageWithColor:(UIColor *)color;
+
++(void)alert:(NSString*)title withMessage:(NSString*)message :(void (^)(UIAlertAction *acton))success;
++ (void)actionSheet:(NSString*)title1 withTitle2:(NSString*)title2;
 @end

@@ -17,11 +17,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
-  
-    
 }
 -(void)setupUI{
- 
     NSArray*btnArray=@[@"分类管理",@"创建套餐",@"配料价格",@"主食价格",@"烹饪价格",@"点餐",@"个人口味"];
     for (int i=0; i<btnArray.count; i++) {
         CGFloat spacing=20;
@@ -45,7 +42,7 @@
                          @"SubfoodPriceViewController",
                          @"FoodPriceViewController",
                          @"CookWayPriceViewController",
-                         @"OrderViewController",
+                         @"OrdersViewController",
                          @"FlavorPriceViewController"];
     if ((button.tag-1000)<classArray.count) {
         id obj=[[NSClassFromString(classArray[button.tag-1000]) alloc]init];

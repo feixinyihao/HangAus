@@ -47,4 +47,8 @@
 @property(nonatomic,copy)NSString *szRoad;
 @property(nonatomic,copy)NSString *szState;
 
+
++(void)save:(ShopInfo*)shopInfo;
+-(void)save;
++(ShopInfo*)getShopInfo;
 @end

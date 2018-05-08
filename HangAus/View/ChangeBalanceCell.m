@@ -8,6 +8,10 @@
 
 #import "ChangeBalanceCell.h"
 #import "ShowFood.h"
+#import "ShopSubFood.h"
+#import <BGFMDB.h>
+#import "ShowFood.h"
+#import "ChosenFood.h"
 @interface ChangeBalanceCell()<UITextFieldDelegate>
 @property(nonatomic,strong)UILabel*nameL;
 
@@ -56,52 +60,109 @@
     self.nameL.font=[UIFont systemFontOfSize:15];
     [self.contentView addSubview:self.nameL];
     
-    self.priceL.frame=CGRectMake(10, 50, 100, 20);
-    self.priceL.text=@"价格";
-    self.priceL.font=[UIFont systemFontOfSize:15];
-    [self.contentView addSubview:self.priceL];
-    
-    self.otherName.frame=CGRectMake(kScreenW-110, 10, 100, 20);
-    self.otherName.text=@"别名选择";
-    self.otherName.textAlignment=NSTextAlignmentRight;
-    self.otherName.font=[UIFont systemFontOfSize:15];
-   // [self.contentView addSubview:self.otherName];
-    
-    self.balanceField.frame=CGRectMake(kScreenW-120, 50, 80, 25);
-    self.balanceField.delegate=self;
-    [self.balanceField addTarget:self action:@selector(change:) forControlEvents:UIControlEventEditingChanged];
-    self.balanceField.layer.borderColor=[UIColor lightGrayColor].CGColor;
-    self.balanceField.layer.borderWidth=1;
-    self.balanceField.layer.cornerRadius=4;
-    self.balanceField.text=[self returnPrice];
-    self.balanceField.textColor=[UIColor redColor];
-    self.balanceField.textAlignment=NSTextAlignmentCenter;
-    self.balanceField.keyboardType=UIKeyboardTypeDecimalPad;
-    self.balanceField.font=[UIFont systemFontOfSize:15];
-    [self.contentView addSubview:self.balanceField];
-    
-    self.didBtn.frame=CGRectMake(kScreenW-40, 48, 30, 30);
-    [self.didBtn setImage:[UIImage imageNamed:@"finish_dis"] forState:UIControlStateNormal];
-    [self.didBtn setImage:[UIImage imageNamed:@"finish_sel"] forState:UIControlStateSelected];
-    [self.contentView addSubview:self.didBtn];
-    [self.didBtn addTarget:self action:@selector(didClick:) forControlEvents:UIControlEventTouchUpInside];
-    
     self.updownBtn.frame=CGRectMake(kScreenW-60, 10, 50, 25);
     self.updownBtn.titleLabel.font=[UIFont systemFontOfSize:15];
+    self.updownBtn.layer.cornerRadius=5;
+    [self.updownBtn addTarget:self action:@selector(updownClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     if (self.showFood.dwStat==2) {
         [self.updownBtn setTitle:@"下架" forState:UIControlStateNormal];
-         [self.updownBtn setBackgroundColor:[UIColor redColor]];
+        [self.updownBtn setBackgroundColor:[UIColor orangeColor]];
     }else{
         [self.updownBtn setTitle:@"上架" forState:UIControlStateNormal];
         [self.updownBtn setBackgroundColor:KmainColor];
     }
-    
-   
-    self.updownBtn.layer.cornerRadius=5;
-    [self.updownBtn addTarget:self action:@selector(updownClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.updownBtn];
     
-    
+    [self.contentView addSubview:self.priceL];
+    if (self.showFood.dwShowProp==1||self.showFood.dwSoldProp==2) {
+        self.priceL.frame=CGRectMake(10, 50, 100, 20);
+        self.priceL.text=@"价格";
+        self.priceL.font=[UIFont systemFontOfSize:15];
+        self.priceL.textColor=[UIColor grayColor];
+        
+        
+        self.balanceField.frame=CGRectMake(kScreenW-120, 50, 80, 25);
+        self.balanceField.delegate=self;
+        [self.balanceField addTarget:self action:@selector(change:) forControlEvents:UIControlEventEditingChanged];
+        self.balanceField.layer.borderColor=[UIColor lightGrayColor].CGColor;
+        self.balanceField.layer.borderWidth=1;
+        self.balanceField.layer.cornerRadius=4;
+        self.balanceField.text=[NSString stringWithFormat:@"%.2f",self.showFood.dwSoldPrice/100.0];
+        self.balanceField.textColor=[UIColor redColor];
+        self.balanceField.textAlignment=NSTextAlignmentCenter;
+        self.balanceField.keyboardType=UIKeyboardTypeDecimalPad;
+        self.balanceField.font=[UIFont systemFontOfSize:15];
+        [self.contentView addSubview:self.balanceField];
+        
+        self.didBtn.frame=CGRectMake(kScreenW-40, 48, 30, 30);
+        [self.didBtn setImage:[UIImage imageNamed:@"finish_dis"] forState:UIControlStateNormal];
+        [self.didBtn setImage:[UIImage imageNamed:@"finish_sel"] forState:UIControlStateSelected];
+        [self.contentView addSubview:self.didBtn];
+        [self.didBtn addTarget:self action:@selector(didClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+       
+        
+        
+       
+       
+        [self.otherName removeFromSuperview];
+    }else{
+        [self.balanceL removeFromSuperview];
+       // [self.updownBtn removeFromSuperview];
+        [self.didBtn removeFromSuperview];
+        [self.balanceField removeFromSuperview];
+        self.priceL.frame=CGRectMake(10, 55, kScreenW, 40);
+        self.priceL.numberOfLines=0;
+        self.priceL.font=[UIFont systemFontOfSize:12];
+        self.priceL.textColor=[UIColor grayColor];
+      
+        if (self.showFood.dwIncSubFood>0) {
+             self.priceL.text=[NSString stringWithFormat:@"包含：%@",[self returnStringFromInc:self.showFood.dwIncSubFood]];
+        }
+ 
+        if (self.showFood.ChosenFoods.count>0) {
+          
+           self.priceL.text= [self returnFoodFromPackages];
+            
+        }
+        
+        self.otherName.frame=CGRectMake(10, 35, kScreenW/2, 20);
+        [self.contentView addSubview:self.otherName];
+        self.otherName.font=[UIFont systemFontOfSize:12];
+        self.otherName.textColor=[UIColor grayColor];
+        self.otherName.textAlignment=NSTextAlignmentLeft;
+        self.otherName.text=[NSString stringWithFormat:@"销售价$%.2f,最低价:$%.2f",self.showFood.dwSoldPrice/100.0,self.showFood.dwMinPrice/100.0];
+    }
+}
+
+
+
+-(NSString*)returnFoodFromPackages{
+   
+    NSString*str=@"包含:";
+    for (int i=0; i<self.showFood.ChosenFoods.count; i++) {
+        ChosenFood*chosenfood=self.showFood.ChosenFoods[i];
+        if (chosenfood.dwShowProp==1&&chosenfood.dwQuantity>1) {
+            str=[str stringByAppendingFormat:@"%ld✘%@,",chosenfood.dwQuantity,chosenfood.szDisFoodName];
+        }else{
+            str=[str stringByAppendingFormat:@"%@,",chosenfood.szDisFoodName];
+           
+        }
+    }
+    return [str substringToIndex:str.length-1];
+}
+-(NSString*)returnStringFromInc:(NSInteger)inc{
+    NSArray*incArray=[ShopSubFood bg_findAll:nil];
+    NSString*str=@"";
+    for (int i=0; i<incArray.count; i++) {
+        ShopSubFood*shopsubfood=incArray[i];
+        if ((inc&shopsubfood.dwSFID)>0) {
+            NSString*subfoodName=[shopsubfood.szName stringByReplacingOccurrencesOfString:@"\r\n" withString:@""];
+            str=[str stringByAppendingFormat:@"%@,",subfoodName];
+        }
+    }
+    return str;
 }
 -(void)updownClick:(UIButton*)sender{
     if ([self.delegate respondsToSelector:@selector(ChangeBalanceCellupdownBtnClick:withCell:)]) {

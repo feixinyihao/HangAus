@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-static NSString* baseURL=@"http://10.121.0.252:80/api/v1/";
+static NSString* baseURL=@"http://10.121.0.250:8088/api/v1/";
 
 
 
@@ -84,4 +84,6 @@ typedef NS_ENUM(NSUInteger,act) {
                    filename:(NSString*)filename
                  uploadData:(NSData*)data
                     success:(void (^)(id  json))success;
+
++ (void)getDataWithOption:(act)option Success:(void(^)(NSArray *modelArray))success;
 @end

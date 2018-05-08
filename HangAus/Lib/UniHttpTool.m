@@ -14,6 +14,14 @@
 #import "StaffInfo.h"
 #import "Language.h"
 #import "StaffToken.h"
+#import <BGFMDB.h>
+#import <MJExtension.h>
+NSString*const actClass[]={
+    [GetShopCookWay]=@"ShopCookway",
+    [GetShopSubFood]=@"ShopSubFood",
+    [GetShopFlavor]=@"ShopFlavor",
+    [GetShop]=@"ShopInfo",
+};
 NSString * const actUrl[]={
     [StaffLogin] = @"staff/login/",
     [StaffLogout]=@"staff/logout/",
@@ -77,8 +85,6 @@ NSString * const actUrl[]={
     AFHTTPSessionManager* manager=[AFHTTPSessionManager manager];
     [manager.requestSerializer willChangeValueForKey:@"timeoutInterval"];
     manager.requestSerializer.timeoutInterval = 10.f;
-    //manager.responseSerializer=[AFJSONResponseSerializer serializer];
- //   manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes= [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript",@"text/html",nil];
     [manager.requestSerializer didChangeValueForKey:@"timeoutInterval"];
     URL=[NSString stringWithFormat:@"%@%@",baseURL,actUrl[option]];
@@ -101,7 +107,6 @@ NSString * const actUrl[]={
         }
        
     }
-
     StaffInfo *staff=[StaffInfo getStaffInfo];
     StaffToken*token=[StaffToken getStaffToken];
     if (token) {
@@ -282,5 +287,47 @@ NSString * const actUrl[]={
     }else{
         [_HUD hide:YES];
     }
+}
+
++ (void)getDataWithOption:(act)option Success:(void(^)(NSArray *modelArray))success{
+    NSArray*models=[NSArray array];
+    models=[NSClassFromString(actClass[option]) bg_findAll:nil];
+    if (models.count<=0) {
+        [self getDataFromHttpWithOption:option Success:^(NSArray *modelArray) {
+            if (success) {
+                success(modelArray);
+            }
+        }];
+    }else{
+        if (success) {
+            success(models);
+        }
+        id obj=[models firstObject];
+        if (([CommonFunc getCurrentDate]-[CommonFunc getTimestanps:[obj bg_updateTime]])>86400) {
+            [self getDataFromHttpWithOption:option Success:^(NSArray *modelArray) {
+            }];
+        }
+    }
+}
++ (void)getDataFromHttpWithOption:(act)option Success:(void(^)(NSArray *modelArray))success{
+    [self getwithparameters:nil option:option success:^(id json) {
+        NSArray*models=[NSArray array];
+        if ([json[@"data"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray*temp=[NSMutableArray array];
+            for (NSDictionary *dict in json[@"data"]) {
+                id obj=[NSClassFromString(actClass[option]) mj_objectWithKeyValues:dict];
+                [obj bg_saveOrUpdate];
+                [temp addObject:obj];
+            }
+            models=temp;
+        }else{
+            id obj=[NSClassFromString(actClass[option]) mj_objectWithKeyValues:json[@"data"]];
+            [obj bg_saveOrUpdate];
+            models=@[obj];
+        }
+        if (success) {
+            success(models);
+        }
+    }];
 }
 @end

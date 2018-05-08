@@ -6,6 +6,7 @@
 //  Copyright © 2018年 DIHO. All rights reserved.
 //
 
+
 #import "CreatePackageViewController.h"
 #import <XXPickerView.h>
 #import <BGFMDB.h>
@@ -21,11 +22,12 @@
 #import "WithTextCell.h"
 #import "ShopSubFood.h"
 #import <BGFMDB.h>
+#import "BAPickView_OC.h"
 @interface CreatePackageViewController ()<UITableViewDelegate,UITableViewDataSource,XXPickerViewDelegate,WithTextCellDelegate>
 @property(nonatomic,strong)NSArray*titleArray;
 @property(nonatomic,weak)UITableView*tableView;
 
-
+@property(nonatomic, strong) BAKit_PickerView *pickView;
 /**
  pick显示的分类名称数组
  */
@@ -54,8 +56,6 @@
 @property(nonatomic,strong)NSMutableArray*selectedChosenFood;
 
 
-@property(nonatomic,assign)CGRect rect;
-
 @property(nonatomic,weak)UITextField*priceField;
 
 @property(nonatomic,assign)NSInteger totalPrice;
@@ -71,7 +71,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.rect=CGRectMake(0, 0, 0, 0);
+    self.lastSelRows=@[@(0),@(0)];
     self.title=@"新建套餐";
     [self setupUI];
     [self setupData];
@@ -168,7 +168,16 @@
     return self.modelArray.count;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 60;
+    if (indexPath.row==5){
+        if (self.selectedChosenFood.count==0) {
+            return 60;
+        }else{
+            return self.selectedChosenFood.count*30+10;
+        }
+        
+    }
+    else return 60;
+   
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
   
@@ -187,12 +196,15 @@
         picker.toolbarTintColor=KmainColor;
         picker.toolbarButtonColor=[UIColor whiteColor];
         [picker setTitlesForComponents:@[self.groupNameArray,self.showFoodNameArray]];
+        DLog(@"%@",self.lastSelRows);
         [picker selectIndexes:self.lastSelRows animated:YES];
         [picker show];
+       
     }
    
     
 }
+
 -(NSString*)returnPriceFromChosenFood:(NSArray*)chosenfoods{
 
     NSInteger price=0;
@@ -212,8 +224,8 @@
 
 
 -(void)save:(UIButton*)button{
-    ShowFood*tempshowfood=[[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwGroupID"),bg_sqlValue(@(8))]] lastObject];
-
+    ShowFood*tempshowfood=[bg_executeSql(@"select * from ShowFood where bg_dwGroupID =8 order by bg_dwDispOrder", @"ShowFood", [ShowFood class]) lastObject];
+   
     NSMutableDictionary*parm=[NSMutableDictionary dictionary];
     parm[@"dwCookWayProp"]=@(0);
     parm[@"dwDefQuantity"]=@(1);
@@ -260,6 +272,7 @@
                 }else{
                     parm[@"dwMinPrice"]=[NSString stringWithFormat:@"%.f",[model.text floatValue]*100];
                     minPrice=[model.text floatValue]*100;
+                    parm[@"dwSoldPrice"]=[NSString stringWithFormat:@"%.f",[model.text floatValue]*100];
                 }
             }break;
             case 6:{
@@ -291,6 +304,7 @@
             }
         }];
    // DLog(@"%@",parm);
+    
 }
 -(NSInteger)returnPriceFromShowFood:(ShowFood*)showfood isDiscount:(BOOL)discount{
     //论重量卖
@@ -351,7 +365,6 @@
     CellWithView*cell5=self.modelArray[5];
     cell5.chosenFoods=self.selectedChosenFood;
    
-   
     CellWithView*cell6=self.modelArray[6];
     cell6.text=[self returnPriceFromChosenFood:self.selectedChosenFood];
     
@@ -359,8 +372,8 @@
     
 }
 - (void)xxPickerView:(XXPickerView *)pickerView didChangeRow:(NSInteger)row inComponent:(NSInteger)component{
-    self.lastSelRows=@[@(row),@(component)];
-    DLog(@"%ld--%ld",row,component);
+   
+
     if (component==0) {
         self.lastSelRows=@[@(row),@(0)];
         ShowGroup*showgroup=self.showGroupArray[row];
@@ -373,7 +386,9 @@
         }
         self.showFoodNameArray=foodTemp;
         [pickerView setTitlesForComponents:@[self.groupNameArray,self.showFoodNameArray]];
-        [pickerView reloadComponent:1];
+        [pickerView reloadAllComponents];
+        [pickerView setSelectedTitles:@[showgroup.szGroupName,self.showFoodNameArray[0]] animated:YES];
+        
     }
     if (component==1) {
          self.lastSelRows=@[self.lastSelRows[0],@(row)];

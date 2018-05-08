@@ -247,22 +247,22 @@ showfood数组
     
     CellWithView*cellmodel=self.cellModelArray[3];
     cellmodel.chosenFoods=chosenfoods;
-    NSInteger total=0;
-    for (int i=0; i<chosenfoods.count; i++) {
-        ChosenFood*chosenfood=chosenfoods[i];
-        NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
-        ShowFood*chosenShowfood=[array firstObject];
-        DLog(@"%@---%ld",chosenShowfood.szDispName,chosenShowfood.dwSoldPrice);
-        if (chosenShowfood.dwSoldProp==2) {
-            chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
-            total=total+[self returnPriceFromShowFood:chosenShowfood isDiscount:YES];
-        }else{
-            total=total+chosenShowfood.dwSoldPrice;
-        }
-        
-    }
+//    NSInteger total=0;
+//    for (int i=0; i<chosenfoods.count; i++) {
+//        ChosenFood*chosenfood=chosenfoods[i];
+//        NSArray*array=[ShowFood bg_find:nil where:[NSString stringWithFormat:@"where %@=%@",bg_sqlKey(@"dwShowFoodID"),bg_sqlValue(@(chosenfood.dwShowFoodID))]];
+//        ShowFood*chosenShowfood=[array firstObject];
+//        DLog(@"%@---%ld",chosenShowfood.szDispName,chosenShowfood.dwSoldPrice);
+//        if (chosenShowfood.dwSoldProp==2) {
+//            chosenShowfood.dwDefQuantity=chosenfood.dwQuantity;
+//            total=total+[self returnPriceFromShowFood:chosenShowfood isDiscount:YES];
+//        }else{
+//            total=total+chosenShowfood.dwSoldPrice;
+//        }
+//
+//    }
     CellWithView*cellmodel6=self.cellModelArray[6];
-    cellmodel6.text=[NSString stringWithFormat:@"%.1f0",total/100.0];
+    cellmodel6.text=[self returnPriceFromChosenFood:chosenfoods];
     NSIndexPath*indexpath=[NSIndexPath indexPathForRow:6 inSection:0];
     NSArray<NSIndexPath*>*indexPathArray=@[indexpath];
     [self.tableView reloadRowsAtIndexPaths:indexPathArray withRowAnimation:UITableViewRowAnimationFade];
@@ -419,12 +419,11 @@ showfood数组
             
             self.showFood.dwSoldPrice=resultShowfood.dwSoldPrice;
             [self.navigationController popViewControllerAnimated:YES];
-            [self.navigationController popViewControllerAnimated:YES];
             
         }];
     }
     else{
-       
+    
         CellWithView*model=self.cellModelArray[2];
         sellPrice=[model.text floatValue]*100;
         NSDictionary*dict=@{@"dwShowFoodID":@(self.showFood.dwShowFoodID),

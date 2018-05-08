@@ -16,14 +16,12 @@
             self.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
             self.titleLabel.font=[UIFont systemFontOfSize:12];
-            [self setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
             [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self setBackgroundImage:[CommonFunc imageWithColor:[UIColor yellowColor]] forState:UIControlStateSelected];
-            [self setBackgroundImage:[CommonFunc imageWithColor:[UIColor blueColor]] forState:UIControlStateNormal];
+            [self setBackgroundImage:[CommonFunc imageWithColor:[UIColor orangeColor]] forState:UIControlStateSelected];
+            [self setBackgroundImage:[CommonFunc imageWithColor:[UIColor grayColor]] forState:UIControlStateNormal];
             self.layer.cornerRadius=5;
             self.layer.masksToBounds=YES;
-            [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [self setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
             [self addTarget:self action:@selector(click:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
@@ -39,6 +37,7 @@
     if ([self.delegate respondsToSelector:@selector(SubfoodBtnClick:)]) {
         [self.delegate SubfoodBtnClick:self];
     }
+
 }
 
 -(void)setValue:(NSInteger)value{

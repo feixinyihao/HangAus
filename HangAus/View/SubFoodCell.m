@@ -14,6 +14,7 @@
 @interface SubFoodCell()<UITextFieldDelegate>
 @property(nonatomic,strong)UITextField*priceField;
 @property(nonatomic,strong)UIButton* didBtn;
+@property(nonatomic,strong)UIView*line;
 @end
 @implementation SubFoodCell
 
@@ -47,8 +48,7 @@
     [self setupView];
 }
 -(void)setupView{
-   
-    self.priceField.frame=CGRectMake(kScreenW-120, 5, 60, 50);
+    self.priceField.frame=CGRectMake(kScreenW-120, 10, 60, 40);
     if (self.subfood) {
         self.priceField.text=[NSString stringWithFormat:@"%.2f",self.subfood.dwUnitPrice/100.0];
         self.textLabel.text=self.subfood.szName;
@@ -90,7 +90,7 @@
     if (sender.selected) {
         if ([self.delegate respondsToSelector:@selector(SubFoodCellBtnClick:withCell:withStr:)]) {
             [self.delegate SubFoodCellBtnClick:sender withCell:self withStr:self.priceField.text];
-            sender.selected=NO;
+            //sender.selected=NO;
         }
     }
     
@@ -107,27 +107,34 @@
     }
     return _priceField;
 }
+-(UIView *)line{
+    if (!_line) {
+        _line=[[UIView alloc]initWithFrame:CGRectMake(0, 60, kScreenW, 10)];
+        _line.backgroundColor=KColor(240, 240, 240);
+    }
+    return _line;
+}
 -(void)change:(UITextField*)textField{
     if (self.subfood) {
-        if (self.subfood.dwUnitPrice!=[textField.text floatValue]*100) {
+        if (self.subfood.dwUnitPrice!=(NSInteger)([textField.text floatValue]*100)) {
             self.didBtn.selected=YES;
         }else{
             self.didBtn.selected=NO;
         }
     }else if(self.soldfood){
-        if (self.soldfood.dwUnitPrice!=[textField.text floatValue]*100) {
+        if (self.soldfood.dwUnitPrice!=(NSInteger)([textField.text floatValue]*100)) {
             self.didBtn.selected=YES;
         }else{
             self.didBtn.selected=NO;
         }
     }else if (self.cookway){
-        if (self.cookway.dwUnitPrice!=[textField.text floatValue]*100) {
+        if (self.cookway.dwUnitPrice!=(NSInteger)([textField.text floatValue]*100)) {
             self.didBtn.selected=YES;
         }else{
             self.didBtn.selected=NO;
         }
     }else if (self.shopFlavor){
-        if (self.shopFlavor.dwUnitPrice!=[textField.text floatValue]*100) {
+        if (self.shopFlavor.dwUnitPrice!=(NSInteger)([textField.text floatValue]*100)) {
             self.didBtn.selected=YES;
         }else{
             self.didBtn.selected=NO;
@@ -161,6 +168,13 @@
                 if (single == '0') {
                     textField.text=@"0.";
                     return NO;
+                }
+            }
+            if (!isHaveDian&&single!='.') {
+                if (textField.text.length>1) {
+                    return NO;
+                }else{
+                    return YES;
                 }
             }
             if (single=='.')

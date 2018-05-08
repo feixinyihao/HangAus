@@ -12,6 +12,9 @@
 #import "BaseNavigationController.h"
 #import "StaffToken.h"
 #import "MainViewController.h"
+#import "UniHttpTool.h"
+#import "ProtocolViewController.h"
+#import "ShopInfo.h"
 @interface AppDelegate ()
 
 
@@ -26,11 +29,18 @@
     self.window=[[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor=[UIColor whiteColor];
     if (token) {
-        LoginViewController*login=[[LoginViewController alloc]init];
-        BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];
-        self.window.rootViewController=base;
-//        MainViewController*main=[[MainViewController alloc]init];
-//        self.window.rootViewController=main;
+        ShopInfo*shopinfo=[ShopInfo getShopInfo];
+        if ((shopinfo.dwShopStat&131072)>0) {
+            MainViewController*main=[[MainViewController alloc]init];
+            self.window.rootViewController=main;
+//            ProtocolViewController*protocol=[[ProtocolViewController alloc]init];
+//            BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:protocol];
+//            self.window.rootViewController=base;
+        }else{
+            ProtocolViewController*protocol=[[ProtocolViewController alloc]init];
+            BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:protocol];
+            self.window.rootViewController=base;
+        }
     }else{
         LoginViewController*login=[[LoginViewController alloc]init];
         BaseNavigationController*base=[[BaseNavigationController alloc]initWithRootViewController:login];

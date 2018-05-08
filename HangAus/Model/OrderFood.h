@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OrderFood : NSObject
+@interface OrderFood : NSObject<NSCopying>
 @property(nonatomic,assign)NSInteger dwSubFoodPrice;
 @property(nonatomic,assign)NSInteger dwSubFoodDiscount;
 @property(nonatomic,assign)NSInteger dwParentIndex;
@@ -31,4 +31,7 @@
 //自定义
 @property(nonatomic,copy)NSString*szShowFoodName;
 @property(nonatomic,assign)NSInteger dwGroupID;
+@property(nonatomic,copy)NSString *szSelSubFoodArrayStr;
+@property(nonatomic,copy)NSString *szSelFlavorArrayStr;
+@property(nonatomic,copy)NSString*szSelCookWay;
 @end
